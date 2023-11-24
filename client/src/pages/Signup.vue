@@ -3,9 +3,9 @@
      <form @submit.prevent="signup">
        <div class="box">
          <h2>Signup for free</h2>
-         <p class="signup-message">{{message}}</p>
+         
          <div class="details">
-           <InputField label="Name" name="Name" type="text" v-model="username" />
+           <InputField label="Name" name="Name" type="text" v-model="name" />
            <InputField label="Email" name="Email" type="text" v-model="email" />
            <InputField label="Password" name="Password" type="password" v-model="password" />
            <InputField label="Confirm Password" name="ConfirmPassword" type="password" v-model="confirm_passoword" />
@@ -19,7 +19,6 @@
  </template>
  
  <script>
- import axios from 'axios';
  import InputField from '../components/viewTools/InputFields.vue';
  export default {
   name: 'Signup',
@@ -28,62 +27,37 @@
   },
   data() {
      return {
-       username: '',
+       name: '',
        email: '',
        password: '',
        confirm_passoword: '',
-       message: '',
      };
   },
   methods: {
-  async signup() {
-    // Add validation to check if required fields are not empty
-    if (!this.username || !this.email || !this.password || !this.confirm_passoword) {
-      this.message = 'Fill all the fields';
-      return;
-    }
-
-    try {
-      const response = await axios.post('http://localhost:9000/api/register', {
-        username: this.username,
-        email: this.email,
-        password: this.password,
-        confirm_passoword: this.confirm_passoword,
-      });
-      console.log('Signing up with:', this.name, this.email, this.password);
-      if (response.data.status === 1) {
-        // Registration successful, perform necessary actions (e.g., redirect)
-        console.log('Registered Successfully', response.data.userId);
-        this.$router.push('/login');
-      } else {
-        // Display error message to the user
-        this.message = 'Signup failed: ' + response.data.message;
-        console.error('Signup failed:', response.data.message);
-      }
-    } catch (error) {
-      this.message = 'Signup failed: ' + error.message;
-      console.error('Error:', error);
-      // Handle other errors (e.g., network error)
-    }
-
-    console.log('Signing up with:', this.username, this.email, this.password);
+     signup() {
+       // Here, you can add the logic to handle the signup
+       // For example, make an API request, validate input, etc.
+       // For simplicity, let's just log the input values for now.
+       console.log('Signing up with:', this.name, this.email, this.password);
+ 
+       // Assuming successful signup, navigate to the dashboard
+       this.$router.push('/dashboard');
+     },
   },
-},
-
-}
+ };
  </script>
  
  <style scoped>
  .box {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  height: 80vh;
-  width: 50vw;
-  background-color: #fffedd;
-  border-radius: 52px;
- }
- .container {
+  font-family: 'Inter', sans-serif;
+}
+
+/* Styling for the full-frame container */
+.full-frame {
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -91,28 +65,58 @@
   background-color: #000000;
  }
 
- .signup-message {
-  color: red;
-  font-size: 14px;
-  margin-top: 10px;
- }
  .signup-btn{
   background-color: orange;
   color: white;
-  width: 64%;
-  height: 40px;
-  margin-bottom: 20px;
-  margin-top: 40px;
   border: none;
-  border-radius: 10px;
-  font-size: 20px;
-  padding: 6px;
- }
+  cursor: pointer;
+}
 
- .login-link {
-  color: #000000;
+button:hover {
+  background-color: #CC5500;
+}
+
+/* Styling for the h2 element */
+.login-page h2 {
+  text-align: center;
+  font-size: 24px;
+}
+
+/* Styling for create-account section */
+.create-account {
+  margin-top: 15px;
+  text-align: center;
+  font-size: 12px;
+}
+
+.create-account a {
+  color: rgb(0, 140, 255);
   text-decoration: none;
-  font-size: 14px;
-  margin-top: 10px;
- }
- </style>
+  font-size: 12px;
+}
+
+.create-account a:hover {
+  text-decoration: underline;
+}
+
+/* Mobile responsiveness */
+@media screen and (max-width: 600px) {
+  .login-page {
+    width: 90%;
+    height: auto;
+    padding: 20px;
+    border-radius: 20px;
+  }
+
+  .form-group input {
+    width: calc(100% - 30px);
+    max-width: calc(100% - 30px);
+    margin: 0;
+  }
+
+  .forgot-password,
+  .create-account {
+    margin-top: 10px;
+  }
+}
+</style>
