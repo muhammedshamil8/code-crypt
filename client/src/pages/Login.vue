@@ -2,11 +2,11 @@
     <div>
       <h2>Login Page</h2>
       <div>
-        <InputField label="Username" name="username" v-model="username" />
+        <InputField label="Username" name="username" v-model="username"/>
         <InputField label="Password" name="password" type="password" v-model="password" />
         <button @click="login">Log in</button>
       </div>
-      <router-link to="/signup">Go to Signup</router-link><br />
+      <router-link to="/signup">Go to Signuph</router-link><br />
     </div>
   </template>
   
