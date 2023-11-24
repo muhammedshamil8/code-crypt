@@ -1,61 +1,54 @@
 <template>
-  <div class="full-frame">
-    <div class="signup-page">
-      <div class="heading"><h2>Sign up for free</h2></div>
-      <form @submit.prevent="signup">
-        <div class="form-group">
-          <label for="name">Name</label>
-          <input type="text" id="name" v-model="name" required />
-        </div>
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" v-model="email" required />
-        </div>
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input type="password" id="password" v-model="password" required />
-        </div>
-        <div class="form-group">
-          <label for="confirm-password">Confirm Password</label>
-          <input type="password" id="confirm-password" v-model="confirmPassword" required />
-        </div>
-        <div class="form-group-button">
-          <button type="submit">Sign Up</button>
-        </div>
-      </form>
-      <div class="create-account">
-        <p>Already have an account?
-          <router-link to="/login">Login</router-link>
-        </p>
-      </div>
-    </div>
+  <div class="container">
+     <form @submit.prevent="signup">
+       <div class="box">
+         <h2>Signup for free</h2>
+         
+         <div class="details">
+           <InputField label="Name" name="Name" type="text" v-model="name" />
+           <InputField label="Email" name="Email" type="text" v-model="email" />
+           <InputField label="Password" name="Password" type="password" v-model="password" />
+           <InputField label="Confirm Password" name="ConfirmPassword" type="password" v-model="confirm_passoword" />
+         </div>
+ 
+         <button type="submit" class="signup-btn">Sign up</button>
+         <router-link to="/login" class="login-link">Don't you have an account? Login</router-link>
+       </div>
+     </form>
   </div>
-</template>
-
-<script>
-export default {
+ </template>
+ 
+ <script>
+ import InputField from '../components/viewTools/InputFields.vue';
+ export default {
+  name: 'Signup',
+  components: {
+     InputField,
+  },
   data() {
-    return {
-      name: '',
-      email: '',
-      password: '',
-      confirmPassword: ''
-    };
+     return {
+       name: '',
+       email: '',
+       password: '',
+       confirm_passoword: '',
+     };
   },
   methods: {
-    signup() {
-      // Implement signup logic here
-    },
+     signup() {
+       // Here, you can add the logic to handle the signup
+       // For example, make an API request, validate input, etc.
+       // For simplicity, let's just log the input values for now.
+       console.log('Signing up with:', this.name, this.email, this.password);
+ 
+       // Assuming successful signup, navigate to the dashboard
+       this.$router.push('/dashboard');
+     },
   },
-};
-</script>
-
-<style>
-/* Global styles */
-body {
-  background-color: black;
-  height: 100vh;
-  margin: 0;
+ };
+ </script>
+ 
+ <style scoped>
+ .box {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -70,14 +63,17 @@ body {
   align-items: center;
 }
 
-/* Styling for the signup-page container */
+/* Styling for the login-page container */
 .signup-page {
-  padding: 5% 10%;
+  padding: 50px;
+  flex-direction: column;
   border-radius: 40px;
   background-color: white;
-  max-width: 600px; /* Limit the width for larger screens */
-  margin: auto; /* Center the form horizontally */
+  width: 400px;
+  height: 380px;
+  padding-top: 30px;
 }
+
 .heading{
   text-align: center;
 }
