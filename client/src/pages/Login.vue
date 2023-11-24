@@ -66,15 +66,7 @@ export default {
 
 <style>
 /* Global styles */
-body {
-  background-color: black;
-  height: 100vh;
-  margin: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: 'Inter', sans-serif;
-}
+
 *{
   font-family: 'Inter', sans-serif;
 }

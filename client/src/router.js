@@ -7,6 +7,11 @@ import Dashboard from './pages/Dashboard.vue';
 import DefaultLayout from './components/Layout/Defualt.vue';
 import GuestLayout from './components/Layout/Guest.vue';
 import NotFound from './pages/NotFound.vue';
+import CreateTask from './pages/CreateTask.vue';
+import Contactus from './pages/Contactus.vue';
+import Projects from './pages/Projects.vue';
+import Calender from './pages/Calender.vue';
+import About from './pages/About.vue';
 
 const routes = [
   {
@@ -25,6 +30,31 @@ const routes = [
       { path: '/dashboard', 
       components: {
         main: Dashboard, 
+      },
+    },
+      { path: '/createtask', 
+      components: {
+        main: CreateTask, 
+      },
+    },
+      { path: '/project', 
+      components: {
+        main: Projects, 
+      },
+    },
+      { path: '/calender', 
+      components: {
+        main: Calender, 
+      },
+    },
+      { path: '/about', 
+      components: {
+        main: About, 
+      },
+    },
+      { path: '/connect', 
+      components: {
+        main: Contactus, 
       },
     },
     ],
