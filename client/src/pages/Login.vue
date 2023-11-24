@@ -13,12 +13,12 @@
           <input type="password" id="password" v-model="password" required />
         </div>
         <div class="form-group-button">
-          <div class="forgot-password">
-            <a href="#">Forgot Password?</a>
-          </div>
           <button type="submit">Log in</button>
         </div>
       </form>
+      <div class="forgot-password">
+        <a href="#">Forgot Password?</a>
+      </div>
       <div class="create-account">
         <p>Need an account?
           <router-link to="/signup">Sign up</router-link>
@@ -66,27 +66,34 @@ export default {
 
 <style>
 /* Global styles */
-
-*{
+body {
+  background-color: black;
+  height: 100vh;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-family: 'Inter', sans-serif;
 }
+
 /* Styling for the full-frame container */
 .full-frame {
   width: 100%;
   display: flex;
   justify-content: center;
-  align-items: center;
 }
 
 /* Styling for the login-page container */
 .login-page {
   padding: 50px;
   flex-direction: column;
-  border-radius: 40px;
+  border-radius: 15px;
   background-color: white;
-  width: 300px;
-  height: 270px;
-  padding-top: 35px;
+  width: 350px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 /* Styling for form groups */
@@ -102,8 +109,6 @@ export default {
 .form-group-button {
   display: flex;
   width: 100%;
-  flex-direction: column; /* Align children vertically */
-  align-items: flex-start; /* Align children to the start of the container */
 }
 
 /* Styling for input fields */
@@ -114,82 +119,50 @@ export default {
   border-color: black;
   padding-left: 5px;
   padding-right: 20px;
-  border-radius: 5px; /* Adjust the border radius as needed */
-  border: 2px solid #ccc; /* Thin border with color #ccc */
 }
+
 /* Styling for the login button */
 button {
   width: 100%;
   padding: 10px;
   margin: auto;
-  background-color: #F36804;
+  background-color: orange;
   border-radius: 10px;
   color: white;
   border: none;
   cursor: pointer;
 }
-
-button:hover {
-  background-color: #CC5500;
+/* Styling for input fields */
+.form-group input {
+  border-radius: 5px; /* Adjust the border radius as needed */
+  border: 2px solid #ccc; /* Thin border with color #ccc */
 }
-
 /* Styling for the h2 element */
 .login-page h2 {
   text-align: center; /* Center the text horizontally */
   font-size: 20px; /* Adjust the font size as needed */
 }
 
-/* Styling for the forgot-password link */
-.forgot-password {
-  margin-bottom: 5px; /* Adjust margin as needed */
-  align-self: flex-end; /* Align to the right within the container */
+
+button:hover {
+  background-color: rgb(255, 0, 0);
 }
 
-.forgot-password a {
-  color: rgb(0, 140, 255);
-  text-decoration: none;
-  font-size: 12px; /* Adjust the font size for the "Forgot Password?" text */
-}
-
-.forgot-password a:hover {
-  text-decoration: underline;
-}
-
-/* Styling for create-account section */
+/* Styling for forgot-password and create-account sections */
+.forgot-password,
 .create-account {
   margin-top: 15px;
   text-align: center;
-  font-size: 12px;
 }
 
+.forgot-password a,
 .create-account a {
   color: rgb(0, 140, 255);
   text-decoration: none;
-  font-size: 12px;
 }
 
+.forgot-password a:hover,
 .create-account a:hover {
   text-decoration: underline;
-}
-
-/* Mobile responsiveness */
-@media screen and (max-width: 600px) {
-  .login-page {
-    width: 90%; /* Adjust width for mobile view */
-    height: auto; /* Allow height to adjust based on content */
-    padding: 20px; /* Adjust padding for mobile view */
-    border-radius: 20px; /* Adjust border radius for mobile view */
-  }
-
-  .form-group input {
-    width: calc(100% - 30px);
-    max-width: calc(100% - 30px);
-    margin: 0;
-  }
-
-  .forgot-password,
-  .create-account {
-    margin-top: 10px; /* Adjust top margin for mobile view */
-  }
 }
 </style>

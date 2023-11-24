@@ -95,7 +95,6 @@ export default {
 }
 
 .box {
-  display: flex;
   justify-content: center;
   align-items: center;
   font-family: 'Inter', sans-serif;
