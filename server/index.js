@@ -15,50 +15,44 @@ const db = mysql.createConnection({
   database: 'taskify',
 });
 
-db.connect(err => {
+db.connect((err) => {
   if (err) {
     console.error('Error connecting to MySQL:', err);
     return;
   }
   console.log('Connected to MySQL');
 });
-// ... (previous code)
-
-app.get('/api/users', async (req, res) => {
-  try {
-    // Fetch all users from the database
-    const getUsersQuery = 'SELECT * FROM users';
-    const [users] = await db.promise().execute(getUsersQuery);
-
-    // Send the users as a JSON response
-    res.json({ status: 1, data: users });
-  } catch (err) {
-    console.error('Error:', err);
-    res.status(500).json({ status: 0, message: 'Internal Server Error' });
-  }
-});
-
-// ... (remaining code)
 
 app.post('/api/register', async (req, res) => {
   try {
-    const user = req.body;
+    const { username, email, password, passwordConfirm } = req.body;
 
-   
+    if (!username || !email || !password) {
+      return res.json({ status: 0, message: 'All fields must be filled' });
+    }
 
-    if (user.password === user.passwordConfirm) {
-      const hashedPassword = await bcrypt.hash(user.password, 10); // Use bcrypt to hash the password
+    if (password.length < 8) {
+      return res.json({ status: 0, message: 'Password must contain at least 8 characters' });
+    }
 
-      const create_at = new Date().toISOString().slice(0, 19).replace('T', ' '); // Format date as YYYY-MM-DD HH:MM:SS
+    const checkUsernameQuery = 'SELECT username FROM users WHERE username = ?';
+    const [usernameRows] = await db.promise().execute(checkUsernameQuery, [username]);
+
+    const checkEmailQuery = 'SELECT email FROM users WHERE email = ?';
+    const [emailRows] = await db.promise().execute(checkEmailQuery, [email]);
+
+    if (usernameRows.length > 0) {
+      return res.json({ status: 0, message: 'Username already exists' });
+    } else if (emailRows.length > 0) {
+      return res.json({ status: 0, message: 'Email already exists' });
+    }
+
+    if (password === passwordConfirm) {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const create_at = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
       const insertUserQuery = 'INSERT INTO users (username, email, password, create_at) VALUES (?, ?, ?, ?)';
-      const [results] = await db.promise().execute(insertUserQuery, [
-        user.username,
-        user.email,
-        hashedPassword,
-        create_at, // <-- Ensure that this value is defined
-      ]);
-      
+      const [results] = await db.promise().execute(insertUserQuery, [username, email, hashedPassword, create_at]);
 
       return res.json({ status: 1, message: 'Record created successfully', userId: results.insertId });
     } else {
@@ -74,75 +68,3 @@ const PORT = 9000;
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
-
-
-
-
-/*
-<template>
-  <div>
-    <h1>Register</h1>
-    <form @submit.prevent="registerUser">
-      <label for="username">Username:</label>
-      <input v-model="formData.username" type="text" id="username" name="username" required>
-
-      <label for="email">Email:</label>
-      <input v-model="formData.email" type="email" id="email" name="email" required>
-
-      <label for="password">Password:</label>
-      <input v-model="formData.password" type="password" id="password" name="password" required>
-
-      <label for="passwordConfirm">Confirm Password:</label>
-      <input v-model="formData.passwordConfirm" type="password" id="passwordConfirm" name="passwordConfirm" required>
-      <br />
-
-      <button type="submit">Register</button>
-    </form>
-  </div>
-</template>
-
-<script>
-export default {
-  name: 'Signup',
-  data() {
-    return {
-      formData: {
-        username: '',
-        email: '',
-        password: '',
-        passwordConfirm: '', 
-      },
-    };
-  },
-  methods: {
-    async registerUser() {
-      try {
-        const response = await fetch('http://localhost:9000/api/register', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            username: this.formData.username,
-            email: this.formData.email,
-            password: this.formData.password,
-            passwordConfirm: this.formData.passwordConfirm,
-          }),
-        });
-
-        const data = await response.json();
-
-        if (data.status === 1) {
-          this.$router.push('/login');
-        } else {
-          console.error('Registration failed:', data.message);
-        }
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    },
-  },
-};
-</script>
-
-*/
