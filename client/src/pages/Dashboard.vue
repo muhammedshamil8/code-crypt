@@ -7,9 +7,12 @@
   </template>
   
   <script>
-  import Demo from '../components/Dashboard123/SideBar.vue';
+  import Demo from '../components/Dashboard/Demo.vue';
   export default {
     name: 'Dashboard',
+    components: {
+    Demo,
+  },
     components:{
       Demo,
     }
