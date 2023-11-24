@@ -1,40 +1,43 @@
 <template>
-    <div>
-      <h2>Login Page</h2>
-      <div>
-        <InputField label="Username" name="username" v-model="username"/>
-        <InputField label="Password" name="password" type="password" v-model="password" />
-        <button @click="login">Log in</button>
-      </div>
-      <router-link to="/signup">Go to Signuph</router-link><br />
-    </div>
-  </template>
-  
-  <script>
-  
-  import InputField from '../components/viewTools/InputFields.vue';
-  export default {
-    name: 'Login',
-    components: {
-      InputField,
-    },
-    data() {
-      return {
-        username: '',
-        password: '',
-      };
-    },
-    methods: {
-      login() {
-        // Here, you can add the logic to handle the login
-        // For example, make an API request, validate credentials, etc.
-        // For simplicity, let's just log the input values for now.
-        console.log('Logging in with:', this.username, this.password);
-  
-        // Assuming successful login, navigate to the dashboard
-        this.$router.push('/dashboard');
-      },
-    },
-  };
-  </script>
-  
+  <div class="login-page">
+     <h2>Login into your account</h2>
+     <form @submit.prevent="login">
+       <div class="form-group">
+         <label for="email">Email</label>
+         <input type="email" id="email" v-model="email" required />
+       </div>
+       <div class="form-group">
+         <label for="password">Password</label>
+         <input type="password" id="password" v-model="password" required />
+       </div>
+       <div class="form-group">
+         <button type="submit">Log in</button>
+       </div>
+     </form>
+     <div class="forgot-password">
+       <a href="#">Forgot Password?</a>
+     </div>
+     <div class="create-account">
+       <p>Need an account?</p>
+       <router-link to="/signup">Sign up</router-link>
+     </div>
+  </div>
+ </template>
+ 
+ <script>
+ export default {
+  data() {
+     return {
+       email: '',
+       password: '',
+     };
+  },
+  methods: {
+     login() {
+       // implement login logic here
+     },
+  },
+ };
+ </script>
+ 
+ <style src="../styles/login.css"></style>

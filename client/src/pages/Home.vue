@@ -5,7 +5,6 @@
     </div>
   </template>
   <script>
-  import '../styles/demo.css';
   export default {
     name: 'Home',
   };
