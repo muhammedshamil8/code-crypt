@@ -2,6 +2,7 @@
 <template>
     <div>
       <label :for="name">{{ label }}</label>
+      <br />
       <input
         :type="type"
         :id="name"
