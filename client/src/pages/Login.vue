@@ -11,6 +11,7 @@
   </template>
   
   <script>
+  
   import InputField from '../components/viewTools/InputFields.vue';
   export default {
     name: 'Login',

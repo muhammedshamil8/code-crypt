@@ -2,8 +2,7 @@
 <template>
     <div>
       <header>
-        <!-- Header content for GuestLayout -->
-        Guest layout guyzzz
+        
       </header>
       <router-view name="main" />
       <footer>
