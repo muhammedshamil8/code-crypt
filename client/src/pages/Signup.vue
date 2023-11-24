@@ -109,9 +109,9 @@ export default {
   align-items: center;
   height: 100vh;
   background-color: #000000;
-}
+ }
 
-.signup-btn {
+ .signup-btn{
   background-color: orange;
   color: white;
   border: none;
@@ -123,7 +123,31 @@ export default {
  .login-link {
   color: #000000;
   text-decoration: none;
-  font-size: 14px;
-  margin-top: 10px;
- }
- </style>
+  font-size: 12px;
+}
+
+.create-account a:hover {
+  text-decoration: underline;
+}
+
+/* Mobile responsiveness */
+@media screen and (max-width: 600px) {
+  .login-page {
+    width: 90%;
+    height: auto;
+    padding: 20px;
+    border-radius: 20px;
+  }
+
+  .form-group input {
+    width: calc(100% - 30px);
+    max-width: calc(100% - 30px);
+    margin: 0;
+  }
+
+  .forgot-password,
+  .create-account {
+    margin-top: 10px;
+  }
+}
+</style>
