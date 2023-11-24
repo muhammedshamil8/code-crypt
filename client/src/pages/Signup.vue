@@ -1,29 +1,5 @@
 <!-- Signup.vue -->
 <template>
-<<<<<<< HEAD
-  <div class="container">
-    <form @submit.prevent="registerUser">
-      <div class="box">
-        <h2>Signup for free</h2>
-        <p v-if="registrationMessage" :class="{ 'error-message': isError }">{{ registrationMessage }}</p>
-
-
-        <div class="details">
-          <InputField label="Name" name="username" id="username" type="text" v-model="formData.username" required />
-          <InputField label="Email" type="email" id="email" name="email" v-model="formData.email" required />
-          <InputField label="Password" v-model="formData.password" type="password" id="password" name="password"
-            required />
-          <InputField label="Confirm Password" v-model="formData.passwordConfirm" type="password" id="passwordConfirm"
-            name="passwordConfirm" required />
-        </div>
-
-        <button type="submit" class="signup-btn" :class="{ 'loading': isLoading }" :disabled="isLoading">
-          {{ isLoading ? 'Signing up...' : 'Sign up' }}
-        </button>
-
-        <router-link to="/login" class="login-link">Don't you have an account? Login</router-link>
-      </div>
-=======
   <div class="signup-container">
     <form @submit.prevent="registerUser" class="signup-form">
       <h2>Sign Up for Free</h2>
@@ -43,7 +19,6 @@
       <button type="submit">Sign Up</button>
       <p>Need an account? <router-link to="/login">Login</router-link></p>
       <p v-if="error" class="error-message">{{ error }}</p>
->>>>>>> af7971d671e8025b91f96c616b184f4c9ffee008
     </form>
   </div>
 </template>
@@ -101,72 +76,11 @@ export default {
 
 
 <style scoped>
-<<<<<<< HEAD
-.signup-btn.loading {
-  background-color: gray;
-  cursor: not-allowed;
-}
-
-.box {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: 'Inter', sans-serif;
-}
-
-/* Styling for the full-frame container */
-.full-frame {
-  width: 100%;
-=======
 .signup-container {
->>>>>>> af7971d671e8025b91f96c616b184f4c9ffee008
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-<<<<<<< HEAD
-  background-color: #000000;
- }
-
- .signup-btn{
-  background-color: orange;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-size: 20px;
-  padding: 6px;
- }
-
- .login-link {
-  color: #000000;
-  text-decoration: none;
-  font-size: 12px;
-}
-
-.create-account a:hover {
-  text-decoration: underline;
-}
-
-/* Mobile responsiveness */
-@media screen and (max-width: 600px) {
-  .login-page {
-    width: 90%;
-    height: auto;
-    padding: 20px;
-    border-radius: 20px;
-  }
-
-  .form-group input {
-    width: calc(100% - 30px);
-    max-width: calc(100% - 30px);
-    margin: 0;
-  }
-
-  .forgot-password,
-  .create-account {
-    margin-top: 10px;
-  }
-=======
   background-color: #f1f1f1; /* Light gray background */
 }
 
@@ -211,6 +125,5 @@ button {
   color: #e74c3c; /* Red error text */
   margin-top: 10px;
   text-align: center;
->>>>>>> af7971d671e8025b91f96c616b184f4c9ffee008
 }
 </style>

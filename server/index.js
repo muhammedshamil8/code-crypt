@@ -39,13 +39,13 @@ app.get('/api/users/:userId', async (req, res) => {
 });
 
 // Add this route in your Express.js server
-app.get('/api/tasks/:userId', async (req, res) => {
-  const userId = req.params.userId;
+app.get('/api/tasks/', async (req, res) => {
+  // const userId = req.params.userId;
 
   try {
     // Query tasks for the specific user using userId
     // Modify this query based on your database structure
-    const [tasks] = await db.promise().query('SELECT * FROM event WHERE user_id = ?', [userId]);
+    const [tasks] = await db.promise().query('SELECT * FROM event');
 
     res.json(tasks);
   } catch (error) {

@@ -10,6 +10,7 @@
     </div>
     <router-link to="/">Log out</router-link>
   </div>
+  {{ tasks }}
 </template>
 
 <script>
