@@ -2,6 +2,7 @@
   <div class="full-frame">
     <div class="login-page">
       <h2>Login into your account</h2>
+      <p class="message">{{message}}</p>
       <form @submit.prevent="login">
         <div class="form-group">
           <label for="email">Email</label>
@@ -28,6 +29,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
@@ -36,8 +39,26 @@ export default {
     };
   },
   methods: {
-    login() {
-      // implement login logic here
+    async login() {
+      try {
+        const response = await axios.post('http://localhost:9000/api/login', {
+          email: this.email,
+          password: this.password,
+          message:''
+        });
+        if (response.data.status === 1) {
+          // Login successful, perform necessary actions (e.g., redirect)
+          console.log('Login successful', response.data.userId);
+          this.$router.push('/dashboard');
+        } else {
+          // Display error message to the user
+          this.message = 'Login failed, wrong credentials' ;
+          console.error('Login failed:', response.data.message);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        // Handle other errors (e.g., network error)
+      }
     },
   },
 };
@@ -78,6 +99,10 @@ body {
 /* Styling for form groups */
 .form-group {
   margin-bottom: 15px;
+}
+
+.message{
+  color: red;
 }
 
 /* Styling for form-group-button */

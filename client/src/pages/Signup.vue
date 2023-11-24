@@ -3,9 +3,9 @@
      <form @submit.prevent="signup">
        <div class="box">
          <h2>Signup for free</h2>
-         
+         <p class="signup-message">{{message}}</p>
          <div class="details">
-           <InputField label="Name" name="Name" type="text" v-model="name" />
+           <InputField label="Name" name="Name" type="text" v-model="username" />
            <InputField label="Email" name="Email" type="text" v-model="email" />
            <InputField label="Password" name="Password" type="password" v-model="password" />
            <InputField label="Confirm Password" name="ConfirmPassword" type="password" v-model="confirm_passoword" />
@@ -19,6 +19,7 @@
  </template>
  
  <script>
+ import axios from 'axios';
  import InputField from '../components/viewTools/InputFields.vue';
  export default {
   name: 'Signup',
@@ -27,24 +28,49 @@
   },
   data() {
      return {
-       name: '',
+       username: '',
        email: '',
        password: '',
        confirm_passoword: '',
+       message: '',
      };
   },
   methods: {
-     signup() {
-       // Here, you can add the logic to handle the signup
-       // For example, make an API request, validate input, etc.
-       // For simplicity, let's just log the input values for now.
-       console.log('Signing up with:', this.name, this.email, this.password);
- 
-       // Assuming successful signup, navigate to the dashboard
-       this.$router.push('/dashboard');
-     },
+  async signup() {
+    // Add validation to check if required fields are not empty
+    if (!this.username || !this.email || !this.password || !this.confirm_passoword) {
+      this.message = 'Fill all the fields';
+      return;
+    }
+
+    try {
+      const response = await axios.post('http://localhost:9000/api/register', {
+        username: this.username,
+        email: this.email,
+        password: this.password,
+        confirm_passoword: this.confirm_passoword,
+      });
+      console.log('Signing up with:', this.name, this.email, this.password);
+      if (response.data.status === 1) {
+        // Registration successful, perform necessary actions (e.g., redirect)
+        console.log('Registered Successfully', response.data.userId);
+        this.$router.push('/login');
+      } else {
+        // Display error message to the user
+        this.message = 'Signup failed: ' + response.data.message;
+        console.error('Signup failed:', response.data.message);
+      }
+    } catch (error) {
+      this.message = 'Signup failed: ' + error.message;
+      console.error('Error:', error);
+      // Handle other errors (e.g., network error)
+    }
+
+    console.log('Signing up with:', this.username, this.email, this.password);
   },
- };
+},
+
+}
  </script>
  
  <style scoped>
@@ -65,6 +91,11 @@
   background-color: #000000;
  }
 
+ .signup-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 10px;
+ }
  .signup-btn{
   background-color: orange;
   color: white;
