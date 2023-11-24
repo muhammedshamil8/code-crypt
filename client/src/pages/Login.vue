@@ -1,5 +1,6 @@
 <template>
-  <div class="full-frame">
+  <div class="body">
+   <div class="full-frame">
     <div class="login-page">
       <h2>Login into your account</h2>
       <p class="message" :class="{ 'success-message': isSuccess, 'error-message': !isSuccess, 'temp-success': isSuccess }">{{ message }}</p>
@@ -25,6 +26,7 @@
       </div>
     </div>
   </div>
+</div>
 </template>
 
 <script>
@@ -100,7 +102,8 @@ export default {
 }
 
 /* Global styles */
-* {
+
+*{
   font-family: 'Inter', sans-serif;
 }
 
@@ -116,12 +119,16 @@ export default {
 .login-page {
   padding: 30px;
   flex-direction: column;
-  border-radius: 10px;
-  background-color: #ffffff;
+  border-radius: 40px;
+  background-color: white;
   width: 300px;
-  height: auto;
-  padding-top: 15px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  height: 270px;
+  padding-top: 35px;
+}
+.heading{
+  text-align: center;
+  padding-bottom: 9px;
+  font-size: 15px;
 }
 
 /* Styling for form groups */
@@ -129,9 +136,8 @@ export default {
   margin-bottom: 15px;
 }
 
-.message {
+.message{
   color: red;
-  margin-bottom: 15px;
 }
 
 /* Styling for form-group-button */
