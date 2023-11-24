@@ -1,46 +1,33 @@
+<!-- Signup.vue -->
 <template>
-  <div class="body">
-  <div class="full-frame">
-    <div class="signup-page">
-      <div class="heading"><h2>Sign up for free</h2></div>
-      <form @submit.prevent="signup">
-        <div class="form-group">
-          <label for="name">Name</label>
-          <input type="text" id="name" v-model="name" required />
+  <div class="container">
+    <form @submit.prevent="registerUser">
+      <div class="box">
+        <h2>Signup for free</h2>
+        <p v-if="registrationMessage" :class="{ 'error-message': isError }">{{ registrationMessage }}</p>
+
+
+        <div class="details">
+          <InputField label="Name" name="username" id="username" type="text" v-model="formData.username" required />
+          <InputField label="Email" type="email" id="email" name="email" v-model="formData.email" required />
+          <InputField label="Password" v-model="formData.password" type="password" id="password" name="password"
+            required />
+          <InputField label="Confirm Password" v-model="formData.passwordConfirm" type="password" id="passwordConfirm"
+            name="passwordConfirm" required />
         </div>
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" v-model="email" required />
-        </div>
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input type="password" id="password" v-model="password" required />
-        </div>
-        <div class="form-group">
-          <label for="confirm-password">Confirm Password</label>
-          <input type="password" id="confirm-password" v-model="confirmPassword" required />
-        </div>
-        <div class="form-group-button">
-          <button type="submit">Sign Up</button>
-        </div>
-      </form>
-      <div class="create-account">
-        <p>Already have an account?
-          <router-link to="/login">Login</router-link>
-        </p>
+
+        <button type="submit" class="signup-btn" :class="{ 'loading': isLoading }" :disabled="isLoading">
+          {{ isLoading ? 'Signing up...' : 'Sign up' }}
+        </button>
+
+        <router-link to="/login" class="login-link">Don't you have an account? Login</router-link>
       </div>
-    </div>
+    </form>
   </div>
-</div>
 </template>
- 
+
 <script>
-import InputField from '../components/viewTools/InputFields.vue';
 export default {
-  name: 'Signup',
-  components: {
-    InputField,
-  },
   data() {
     return {
       formData: {
@@ -49,47 +36,30 @@ export default {
         password: '',
         passwordConfirm: '',
       },
-      isLoading: false,
-      registrationMessage: '',
     };
-  },
-  computed: {
-    isError() {
-      return this.registrationMessage.toLowerCase().includes('error');
-    },
   },
   methods: {
     async registerUser() {
       try {
-        this.isLoading = true;
+        console.log('Form Data:', this.formData);
+
         const response = await fetch('http://localhost:9000/api/register', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
-            username: this.formData.username,
-            email: this.formData.email,
-            password: this.formData.password,
-            passwordConfirm: this.formData.passwordConfirm,
-          }),
+          body: JSON.stringify(this.formData),
         });
 
         const data = await response.json();
 
         if (data.status === 1) {
-          this.registrationMessage = 'Registration successful!';
-          setTimeout(() => {
-            this.$router.push('/login');
-          }, 3000);
+          console.log('Registration successful!');
         } else {
-          this.registrationMessage = `${data.message}`;
+          console.error('Registration failed:', data.message);
         }
       } catch (error) {
         console.error('Error:', error);
-        this.registrationMessage = 'An error occurred during registration. Please try again.';
-      } finally {
-        this.isLoading = false;
       }
     },
   },
@@ -97,12 +67,13 @@ export default {
 </script>
 
 
-<style>
-/* Global styles */
-.body {
-  background-color: black;
-  height: 100vh;
-  margin: 0;
+<style scoped>
+.signup-btn.loading {
+  background-color: gray;
+  cursor: not-allowed;
+}
+
+.box {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -115,72 +86,21 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-}
+  height: 100vh;
+  background-color: #000000;
+ }
 
-/* Styling for the login-page container */
-.signup-page {
-  padding: 50px;
-  flex-direction: column;
-  border-radius: 40px;
-  background-color: white;
-  width: 380px;
-  height: 420px;
-  padding-top: 30px;
-}
-
-.heading{
-  padding-bottom: 20px;
-  font-size: 15px;
-  text-align: center;
-}
-/* Styling for form groups */
-.form-group {
-  margin-bottom: 15px;
-}
-
-/* Styling for input fields */
-.form-group input {
-  border-radius: 3px;
-  width: 100%;
-  height: 25px;
-  border-color: black;
-  padding-left: 5px;
-  padding-right: 20px;
-  border-radius: 5px; /* Adjust the border radius as needed */
-  border: 2px solid #ccc; /* Thin border with color #ccc */
-}
-
-/* Styling for the login button */
-button {
-  width: 100%;
-  padding: 10px;
-  margin: auto;
-  background-color: #F36804;
-  border-radius: 10px;
+ .signup-btn{
+  background-color: orange;
   color: white;
   border: none;
-  cursor: pointer;
-}
+  border-radius: 10px;
+  font-size: 20px;
+  padding: 6px;
+ }
 
-button:hover {
-  background-color: #CC5500;
-}
-
-/* Styling for the h2 element */
-.login-page h2 {
-  text-align: center;
-  font-size: 24px;
-}
-
-/* Styling for create-account section */
-.create-account {
-  margin-top: 15px;
-  text-align: center;
-  font-size: 12px;
-}
-
-.create-account a {
-  color: rgb(0, 140, 255);
+ .login-link {
+  color: #000000;
   text-decoration: none;
   font-size: 12px;
 }
@@ -191,9 +111,11 @@ button:hover {
 
 /* Mobile responsiveness */
 @media screen and (max-width: 600px) {
-  .signup-page {
-    padding: 10px; /* Adjust padding for smaller screens */
-    width: 90%; /* Adjust width for smaller screens */
+  .login-page {
+    width: 90%;
+    height: auto;
+    padding: 20px;
+    border-radius: 20px;
   }
 
   .form-group input {
