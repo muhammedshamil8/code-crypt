@@ -23,8 +23,6 @@ db.connect((err) => {
   console.log('Connected to MySQL');
 });
 
-
-//register user
 app.post('/api/register', async (req, res) => {
   try {
     const { username, email, password, passwordConfirm } = req.body;
@@ -66,49 +64,6 @@ app.post('/api/register', async (req, res) => {
   }
 });
 
-// login user
-app.post('/api/login', async (req, res) => {
-  try {
-    const { email, password: providedPassword } = req.body; // Rename 'password' to 'providedPassword'
-    username = req.body.email;
-
-    if (!email || !providedPassword) {
-      return res.json({ status: 100, message: 'All fields must be filled' });
-    }
-
-    const checkUsernameQuery = 'SELECT * FROM users WHERE email = ?';
-    const [rows] = await db.promise().execute(checkUsernameQuery, [email]);
-
-    if (rows.length > 0) {
-      const hashedPassword = rows[0].password;
-      const isPasswordMatch = await bcrypt.compare(providedPassword, hashedPassword);
-
-      if (isPasswordMatch) {
-        return res.json({ status: 1, message: 'Login successful', userId: rows[0].id });
-      } else {
-        return res.json({ status: 0, message: 'Invalid credentials' });
-      }
-    } else {
-      return res.json({ status: 0, message: 'Invalid credentials' });
-    }
-  } catch (err) {
-    console.error('Error:', err);
-    return res.status(500).json({ status: 0, message: 'Internal Server Error' });
-  }
-});
-
-//get all signups
-app.get('/api/signups', async (req, res) => {
-  try {
-    const selectAllQuery = 'SELECT * FROM users';
-    const [rows] = await db.promise().execute(selectAllQuery);
-    return res.json({ status: 200, message: 'Success', data: rows });
-  } catch (err) {
-    console.error('Error:', err);
-    return res.status(500).json({ status: 0, message: 'Internal Server Error' });
-  }
-}
-)
 const PORT = 9000;
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
