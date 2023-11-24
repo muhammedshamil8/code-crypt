@@ -1,14 +1,19 @@
 <template>
     <div>
       <h2>This is Dashboard</h2>
-      
+      <Demo />
       <router-link to="/">Log out</router-link>
     </div>
   </template>
   
   <script>
+  import Demo from '../components/Dashboard123/SideBar.vue';
   export default {
     name: 'Dashboard',
+    components:{
+      Demo,
+    }
+    
   };
   </script>
   
