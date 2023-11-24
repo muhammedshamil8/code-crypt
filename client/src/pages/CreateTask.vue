@@ -29,57 +29,37 @@
       <label for="description">Description</label>
       <textarea id="description" name="description" v-model="inputs.description" rows="3" placeholder="e.g., stackup designing ..." required></textarea>
 
-      <!-- Add to Project Button -->
-      <button class="add-button" @click="handleAddToProject">Add to Project</button>
-
-      <!-- Project Section -->
-      <div v-if="showProjectSection" class="project-section">
-        <label for="selectedProject">Project</label>
-        <select id="selectedProject" name="selectedProject" v-model="inputs.selectedProject" required>
-          <option value="">Select a project</option>
-          <option v-for="project in projectOptions" :key="project.project_id" :value="project.project_id">
-            {{ project.project_name }}
-          </option>
-        </select>
-
-        <button class="add-button" @click="cancelProject">Cancel</button>
-      </div>
-
       <!-- Submit Button -->
-      <div class="submit">
-        <button class="add-button submit" type="submit">Submit</button>
-      </div>
+      <button class="add-button submit" type="submit">Create Task</button>
     </form>
 
     <!-- Project Form -->
     <form v-else-if="showProjectForm" @submit.prevent="handleProjectSubmit" class="project-form">
       <h1>Create Project</h1>
       <!-- Project Inputs -->
-      <div class="create-project">
-        <input type="text" placeholder="Project Name" v-model="projectInputs.projectName" required />
-        <label for="projectDescription">Description</label>
-        <textarea id="projectDescription" name="projectDescription" v-model="projectInputs.projectDescription" rows="3" placeholder="e.g., stackup project ..." required></textarea>
-      </div>
+      <label for="projectName">Project Name</label>
+      <input type="text" id="projectName" name="projectName" v-model="projectInputs.projectName" placeholder="e.g., Project X" required />
 
-      <h3>You can Add Team members in the project page</h3>
-
-      <!-- Create Task Button inside Project Form -->
-      <button class="add-button" @click="createTaskInProjectForm">Create Task</button>
+      <label for="projectDescription">Description</label>
+      <textarea id="projectDescription" name="projectDescription" v-model="projectInputs.projectDescription" rows="3" placeholder="e.g., stackup project ..." required></textarea>
 
       <!-- Submit Button for Project Form -->
-      <div class="submit">
-        <button class="add-button" type="submit">Submit</button>
-      </div>
+      <button class="add-button submit" type="submit">Create Project</button>
     </form>
 
     <!-- Error Messages -->
     <div v-if="errors && Object.keys(errors).length > 0" class="error-message">
       <p v-for="(value, key) in errors" :key="key" class="error-message">{{ value }}</p>
     </div>
+
+    <!-- Success Message -->
+    <p v-if="successMessage" class="success-message">{{ successMessage }}</p>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
@@ -90,41 +70,92 @@ export default {
         taskType: '',
         priority: '1',
         description: '',
-        selectedProject: '',
       },
-      showTaskForm: false,
-      showProjectForm: false,
-      showProjectSection: false,
       projectInputs: {
         projectName: '',
         projectDescription: '',
       },
-      projectOptions: [], // Assuming this array is populated dynamically
+      showTaskForm: true,
+      showProjectForm: false,
       errors: {},
+      successMessage: '',
     };
   },
   methods: {
-    handleSubmit() {
-      // Your submit logic for tasks
+    async handleSubmit() {
+      try {
+        const user_id = localStorage.getItem('user_id'); 
+        const payload = { ...this.inputs, user_id };
+        console.log('Task Payload:', payload);
+
+        const response = await axios.post('http://localhost:9000/api/create-task', payload);
+
+        if (response.data.status === 1) {
+          console.log('Task created successfully:', response.data.message);
+          this.successMessage = 'Task created successfully';
+          this.clearForm();
+          this.errors = {};
+          setTimeout(() => {
+          this.successMessage = '';
+        }, 3000);
+
+        } else {
+          console.error('Error creating task:', response.data.message || 'An unknown error occurred');
+          this.errors = { task: response.data.message || 'An unknown error occurred' };
+          this.successMessage = '';
+        }
+      } catch (error) {
+        console.error('Error creating task:', error.message);
+        this.errors = { task: 'An error occurred while creating the task' };
+        this.successMessage = '';
+
+      }
     },
-    handleProjectSubmit() {
-      // Your submit logic for projects
+
+    async handleProjectSubmit() {
+      try {
+        const user_id = localStorage.getItem('user_id'); 
+        const payload = { ...this.projectInputs, user_id };
+
+        const response = await axios.post('http://localhost:9000/api/create-project', payload);
+
+        if (response.data.status === 1) {
+          console.log('Project created successfully:', response.data.message);
+          this.successMessage = 'Project created successfully';
+          this.errors = {};
+          setTimeout(() => {
+          this.successMessage = '';
+        }, 3000);
+          // Optionally, you can reset the form or perform other actions after successful submission
+        } else {
+          console.error('Error creating project:', response.data.message);
+          this.errors = { project: response.data.message };
+          this.successMessage = '';
+
+        }
+      } catch (error) {
+        console.error('Error creating project:', error);
+        this.errors = { project: 'An error occurred while creating the project' };
+        this.successMessage = '';
+
+      }
     },
-    handleAddToProject() {
-      this.showProjectSection = true;
-    },
-    cancelProject() {
-      this.showProjectSection = false;
-    },
+
     toggleForm() {
-      // Toggle between task and project forms
       this.showTaskForm = !this.showTaskForm;
       this.showProjectForm = !this.showProjectForm;
-      this.showProjectSection = false; // Hide project section
+      this.errors = {};
+      this.successMessage = ''; // Clear success message when switching forms
     },
-    createTaskInProjectForm() {
-      // Additional logic for creating a task while in the project form
-      console.log('Creating task in project form');
+
+    clearForm() {
+      // Reset form fields
+      this.inputs.title = '';
+      this.inputs.startDate = '';
+      this.inputs.endDate = '';
+      this.inputs.taskType = '';
+      this.inputs.priority = '1';
+      this.inputs.description = '';
     },
   },
 };
@@ -187,9 +218,13 @@ textarea {
 
 .error-message {
   color: red;
+  text-align: center;
+  margin: auto;
 }
 
 .success-message {
   color: green;
+  text-align: center;
+  margin: auto;
 }
 </style>

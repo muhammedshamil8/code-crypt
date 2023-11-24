@@ -22,7 +22,74 @@ db.connect((err) => {
   }
   console.log('Connected to MySQL');
 });
+// Fetch tasks for a user
+app.get('/api/users/:userId', async (req, res) => {
+  const userId = req.params.userId;
 
+  try {
+    // Query tasks for the specific user using userId
+    // Modify this query based on your database structure
+    const [tasks] = await db.promise().query('SELECT * FROM users WHERE user_id = ?', [userId]);
+
+    res.json(tasks);
+  } catch (error) {
+    console.error('Error fetching tasks:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Add this route in your Express.js server
+app.get('/api/tasks/:userId', async (req, res) => {
+  const userId = req.params.userId;
+
+  try {
+    // Query tasks for the specific user using userId
+    // Modify this query based on your database structure
+    const [tasks] = await db.promise().query('SELECT * FROM event WHERE user_id = ?', [userId]);
+
+    res.json(tasks);
+  } catch (error) {
+    console.error('Error fetching tasks:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
+
+// User login endpoint
+app.post('/api/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ status: 0, message: 'All fields must be filled' });
+    }
+
+    const getUserQuery = 'SELECT id, password FROM users WHERE email = ?';
+    const [userRows] = await db.promise().execute(getUserQuery, [email]);
+
+    if (userRows.length === 0) {
+      return res.status(401).json({ status: 0, message: 'User not found' });
+    }
+
+    const hashedPassword = userRows[0].password;
+    const userId = userRows[0].id;
+
+    const isPasswordValid = await bcrypt.compare(password, hashedPassword);
+
+    if (isPasswordValid) {
+      return res.json({ status: 1, message: 'Login successful', userId });
+    } else {
+      return res.status(401).json({ status: 0, message: 'Invalid password' });
+    }
+  } catch (err) {
+    console.error('Error:', err);
+    return res.status(500).json({ status: 0, message: 'Internal Server Error' });
+  }
+});
+
+
+// register
 app.post('/api/register', async (req, res) => {
   try {
     const { username, email, password, passwordConfirm } = req.body;
@@ -65,31 +132,26 @@ app.post('/api/register', async (req, res) => {
 });
 
 
-
-
-
-// creating task and project
-
 // Task creation endpoint
 app.post('/api/create-task', async (req, res) => {
   try {
     const { user_id, title, startDate, endDate, taskType, priority, description, selectedProject } = req.body;
 
-    // Your existing task creation logic here
-    // ...
+    
 
-    // Example placeholder logic
-    // const checkTaskQuery = "SELECT user_id FROM event WHERE user_id = ? AND task_name = ?";
-    // const checkTaskStmt = db.promise().execute(checkTaskQuery, [user_id, title]);
-    // const [taskResult] = await checkTaskStmt;
+    const checkTaskQuery = "SELECT user_id FROM event WHERE user_id = ? AND task_name = ?";
+    const checkTaskStmt = db.promise().execute(checkTaskQuery, [user_id, title]);
+    const [taskResult] = await checkTaskStmt;
 
-    // if (taskResult && taskResult.length > 0) {
-    //   return res.json({ status: 0, message: 'Task with the same title already exists for this user' });
-    // }
+    if (taskResult && taskResult.length > 0) {
+      return res.json({ status: 0, message: 'Task with the same title already exists for this user' });
+    }
 
-    // const insertTaskQuery = "INSERT INTO event (user_id, task_name, start_date, end_date, task_type, priority, description, task_progress, task_done, project_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, 0, 0, ?, NOW(), NOW())";
-    // const insertTaskStmt = db.promise().execute(insertTaskQuery, [user_id, title, startDate, endDate, taskType, priority, description, selectedProject]);
-    // await insertTaskStmt;
+    const insertTaskQuery = "INSERT INTO event (user_id, task_name, start_date, end_date, task_type, priority, description, task_progress, task_done, project_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, 0, 0, ?, NOW(), NOW())";
+
+    const insertTaskStmt = db.promise().execute(insertTaskQuery, [user_id, title, startDate, endDate, taskType, priority, description, selectedProject || null]);
+
+    await insertTaskStmt;
 
     return res.json({ status: 1, message: 'Task created successfully' });
   } catch (error) {
@@ -97,6 +159,8 @@ app.post('/api/create-task', async (req, res) => {
     return res.status(500).json({ status: 0, message: 'Internal Server Error' });
   }
 });
+
+
 
 // Project creation endpoint
 app.post('/api/create-project', async (req, res) => {
@@ -107,17 +171,17 @@ app.post('/api/create-project', async (req, res) => {
     // ...
 
     // Example placeholder logic
-    // const checkProjectQuery = "SELECT project_id FROM project WHERE user_id = ? AND project_name = ?";
-    // const checkProjectStmt = db.promise().execute(checkProjectQuery, [user_id, projectName]);
-    // const [projectResult] = await checkProjectStmt;
+    const checkProjectQuery = "SELECT project_id FROM project WHERE user_id = ? AND project_name = ?";
+    const checkProjectStmt = db.promise().execute(checkProjectQuery, [user_id, projectName]);
+    const [projectResult] = await checkProjectStmt;
 
-    // if (projectResult && projectResult.length > 0) {
-    //   return res.json({ status: 0, message: 'Project with the same name already exists for this user' });
-    // }
+    if (projectResult && projectResult.length > 0) {
+      return res.json({ status: 0, message: 'Project with the same name already exists for this user' });
+    }
 
-    // const insertProjectQuery = "INSERT INTO project (user_id, project_name, project_description) VALUES (?, ?, ?)";
-    // const insertProjectStmt = db.promise().execute(insertProjectQuery, [user_id, projectName, projectDescription]);
-    // await insertProjectStmt;
+    const insertProjectQuery = "INSERT INTO project (user_id, project_name, project_description) VALUES (?, ?, ?)";
+    const insertProjectStmt = db.promise().execute(insertProjectQuery, [user_id, projectName, projectDescription]);
+    await insertProjectStmt;
 
     return res.json({ status: 1, message: 'Project created successfully' });
   } catch (error) {
@@ -125,6 +189,7 @@ app.post('/api/create-project', async (req, res) => {
     return res.status(500).json({ status: 0, message: 'Internal Server Error' });
   }
 });
+
 
 const PORT = 9000;
 app.listen(PORT, () => {

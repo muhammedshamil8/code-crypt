@@ -2,27 +2,26 @@
   <div class="full-frame">
     <div class="login-page">
       <h2>Login into your account</h2>
-      <p class="message">{{message}}</p>
+      <p class="message" :class="{ 'success-message': isSuccess, 'error-message': !isSuccess, 'temp-success': isSuccess }">{{ message }}</p>
+
       <form @submit.prevent="login">
         <div class="form-group">
           <label for="email">Email</label>
-          <input type="email" id="email" v-model="email" required />
+          <input type="email" id="email" v-model="email" required :disabled="isLoading" />
         </div>
         <div class="form-group">
           <label for="password">Password</label>
-          <input type="password" id="password" v-model="password" required />
+          <input type="password" id="password" v-model="password" required :disabled="isLoading" />
         </div>
         <div class="form-group-button">
           <div class="forgot-password">
             <a href="#">Forgot Password?</a>
           </div>
-          <button type="submit">Log in</button>
+          <button type="submit" :disabled="isLoading">{{ isLoading ? 'Logging in...' : 'Log in' }}</button>
         </div>
       </form>
       <div class="create-account">
-        <p>Need an account?
-          <router-link to="/signup">Sign up</router-link>
-        </p>
+        <p>Need an account? <router-link to="/signup">Sign up</router-link></p>
       </div>
     </div>
   </div>
@@ -36,28 +35,49 @@ export default {
     return {
       email: '',
       password: '',
+      message: '',
+      isSuccess: false,
+      isLoading: false,
     };
   },
   methods: {
     async login() {
       try {
+        this.isLoading = true;
+        console.log('Login Data:', { email: this.email, password: this.password });
         const response = await axios.post('http://localhost:9000/api/login', {
           email: this.email,
           password: this.password,
-          message:''
         });
+
         if (response.data.status === 1) {
-          // Login successful, perform necessary actions (e.g., redirect)
-          console.log('Login successful', response.data.userId);
-          this.$router.push('/dashboard');
+          // Login successful
+          this.isSuccess = true;
+          this.message = 'Login successful. Redirecting...';
+
+          localStorage.setItem('user_id', response.data.userId);
+          // Optional: You can redirect after a delay
+          setTimeout(() => {
+            this.$router.push('/dashboard');
+          }, 1500);
         } else {
-          // Display error message to the user
-          this.message = 'Login failed, wrong credentials' ;
-          console.error('Login failed:', response.data.message);
+          // Login failed
+          this.message = 'Login failed. Wrong credentials.';
+          this.isSuccess = false;
         }
       } catch (error) {
         console.error('Error:', error);
         // Handle other errors (e.g., network error)
+        this.message = 'An error occurred. Please try again.';
+        this.isSuccess = false;
+      } finally {
+        // Reset form fields and loading state
+        this.email = '';
+        this.password = '';
+        this.isLoading = false;
+        setTimeout(() => {
+          this.message = '';
+        }, 5000);
       }
     },
   },
@@ -65,11 +85,25 @@ export default {
 </script>
 
 <style>
-/* Global styles */
+/* ... Existing styles ... */
+.temp-success {
+  color: green;
+}
 
-*{
+.success-message {
+  color: green;
+  
+}
+
+.error-message {
+  color: red;
+}
+
+/* Global styles */
+* {
   font-family: 'Inter', sans-serif;
 }
+
 /* Styling for the full-frame container */
 .full-frame {
   width: 100%;
@@ -80,13 +114,14 @@ export default {
 
 /* Styling for the login-page container */
 .login-page {
-  padding: 50px;
+  padding: 30px;
   flex-direction: column;
-  border-radius: 40px;
-  background-color: white;
+  border-radius: 10px;
+  background-color: #ffffff;
   width: 300px;
-  height: 270px;
-  padding-top: 35px;
+  height: auto;
+  padding-top: 15px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 /* Styling for form groups */
@@ -94,61 +129,61 @@ export default {
   margin-bottom: 15px;
 }
 
-.message{
+.message {
   color: red;
+  margin-bottom: 15px;
 }
 
 /* Styling for form-group-button */
 .form-group-button {
   display: flex;
   width: 100%;
-  flex-direction: column; /* Align children vertically */
-  align-items: flex-start; /* Align children to the start of the container */
+  flex-direction: column;
+  align-items: center;
 }
 
 /* Styling for input fields */
 .form-group input {
-  border-radius: 3px;
-  width: 92.5%;
-  height: 25px;
-  border-color: black;
-  padding-left: 5px;
-  padding-right: 20px;
-  border-radius: 5px; /* Adjust the border radius as needed */
-  border: 2px solid #ccc; /* Thin border with color #ccc */
+  border: 1px solid #dcdcdc;
+  border-radius: 5px;
+  width: 100%;
+  height: 40px;
+  padding: 10px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
 }
+
 /* Styling for the login button */
 button {
   width: 100%;
-  padding: 10px;
-  margin: auto;
-  background-color: #F36804;
-  border-radius: 10px;
-  color: white;
+  padding: 12px;
+  background-color: #4caf50;
   border: none;
+  border-radius: 5px;
+  color: white;
   cursor: pointer;
 }
 
 button:hover {
-  background-color: #CC5500;
+  background-color: #45a049;
 }
 
 /* Styling for the h2 element */
 .login-page h2 {
-  text-align: center; /* Center the text horizontally */
-  font-size: 20px; /* Adjust the font size as needed */
+  text-align: center;
+  font-size: 24px;
+  color: #333;
 }
 
 /* Styling for the forgot-password link */
 .forgot-password {
-  margin-bottom: 5px; /* Adjust margin as needed */
-  align-self: flex-end; /* Align to the right within the container */
+  text-align: right;
 }
 
 .forgot-password a {
-  color: rgb(0, 140, 255);
+  color: #007bff;
   text-decoration: none;
-  font-size: 12px; /* Adjust the font size for the "Forgot Password?" text */
+  font-size: 14px;
 }
 
 .forgot-password a:hover {
@@ -159,13 +194,14 @@ button:hover {
 .create-account {
   margin-top: 15px;
   text-align: center;
-  font-size: 12px;
+  font-size: 14px;
+  color: #555;
 }
 
 .create-account a {
-  color: rgb(0, 140, 255);
+  color: #007bff;
   text-decoration: none;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .create-account a:hover {
@@ -175,21 +211,14 @@ button:hover {
 /* Mobile responsiveness */
 @media screen and (max-width: 600px) {
   .login-page {
-    width: 90%; /* Adjust width for mobile view */
-    height: auto; /* Allow height to adjust based on content */
-    padding: 20px; /* Adjust padding for mobile view */
-    border-radius: 20px; /* Adjust border radius for mobile view */
+    width: 90%;
+    padding: 20px;
+    border-radius: 10px;
   }
 
   .form-group input {
-    width: calc(100% - 30px);
-    max-width: calc(100% - 30px);
-    margin: 0;
-  }
-
-  .forgot-password,
-  .create-account {
-    margin-top: 10px; /* Adjust top margin for mobile view */
+    width: calc(100% - 20px);
+    max-width: calc(100% - 20px);
   }
 }
 </style>

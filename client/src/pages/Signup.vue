@@ -17,7 +17,7 @@
       <input type="password" id="passwordConfirm" v-model="formData.passwordConfirm" required />
 
       <button type="submit">Sign Up</button>
-
+      <p>Need an account? <router-link to="/login">Login</router-link></p>
       <p v-if="error" class="error-message">{{ error }}</p>
     </form>
   </div>
