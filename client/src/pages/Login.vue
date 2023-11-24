@@ -1,4 +1,5 @@
 <template>
+<div class="full-frame">
   <div class="login-page">
      <h2>Login into your account</h2>
      <form @submit.prevent="login">
@@ -18,10 +19,11 @@
        <a href="#">Forgot Password?</a>
      </div>
      <div class="create-account">
-       <p>Need an account?</p>
-       <router-link to="/signup">Sign up</router-link>
+       <p>Need an account?
+       <router-link to="/signup">Sign up</router-link></p>
      </div>
   </div>
+</div>
  </template>
  
  <script>
