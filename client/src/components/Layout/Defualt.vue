@@ -128,7 +128,6 @@ header {
 aside {
   background-color: #a70f0f;
   min-height: 100%;
-  bottom: 0px;
   width: 25%;
   float: left;
   color: #fff;
@@ -137,6 +136,7 @@ aside {
   align-items: center;
   padding: 10px;
   position: fixed;
+  left: 0px;
   bottom: 0px;
 }
 
