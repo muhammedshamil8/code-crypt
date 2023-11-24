@@ -64,5 +64,6 @@
   border-radius: 10px;
   border:none;
   background-color: #d9d9d9;
+  font-size: 16px;
 }
 </style>

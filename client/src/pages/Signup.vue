@@ -96,15 +96,14 @@ export default {
 
 .box {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  height: 80vh;
-  width: 50vw;
-  background-color: #fffedd;
-  border-radius: 52px;
+  font-family: 'Inter', sans-serif;
 }
 
-.container {
+/* Styling for the full-frame container */
+.full-frame {
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -115,32 +114,16 @@ export default {
 .signup-btn {
   background-color: orange;
   color: white;
-  width: 64%;
-  height: 40px;
-  margin-bottom: 20px;
-  margin-top: 40px;
   border: none;
   border-radius: 10px;
   font-size: 20px;
   padding: 6px;
-}
+ }
 
-.login-link {
+ .login-link {
   color: #000000;
   text-decoration: none;
   font-size: 14px;
   margin-top: 10px;
-}
-
-.registration-message {
-  color: green;
-  /* or any color you prefer for success messages */
-  margin-top: 10px;
-}
-
-.error-message {
-  color: red; /* or any color you prefer for error messages */
-  margin-top: 10px;
-}
-
-</style>
+ }
+ </style>
