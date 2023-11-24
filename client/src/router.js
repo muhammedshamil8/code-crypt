@@ -1,12 +1,12 @@
 // src/router.js
 import { createRouter, createWebHistory } from 'vue-router';
-import Login from '../pages/Login.vue';
-import Signup from '../pages/Signup.vue';
-import Home from '../pages/Home.vue';
-import Dashboard from '../pages/Dashboard.vue';
-import DefaultLayout from './Layout/Defualt.vue';
-import GuestLayout from './Layout/Guest.vue';
-import NotFound from '../pages/NotFound.vue';
+import Login from './pages/Login.vue';
+import Signup from './pages/Signup.vue';
+import Home from './pages/Home.vue';
+import Dashboard from './pages/Dashboard.vue';
+import DefaultLayout from './components/Layout/Defualt.vue';
+import GuestLayout from './components/Layout/Guest.vue';
+import NotFound from './pages/NotFound.vue';
 
 const routes = [
   {
