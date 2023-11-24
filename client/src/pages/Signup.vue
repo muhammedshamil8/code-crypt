@@ -70,17 +70,14 @@ body {
   align-items: center;
 }
 
-/* Styling for the login-page container */
+/* Styling for the signup-page container */
 .signup-page {
-  padding: 50px;
-  flex-direction: column;
+  padding: 5% 10%;
   border-radius: 40px;
   background-color: white;
-  width: 400px;
-  height: 380px;
-  padding-top: 30px;
+  max-width: 600px; /* Limit the width for larger screens */
+  margin: auto; /* Center the form horizontally */
 }
-
 .heading{
   text-align: center;
 }
@@ -142,12 +139,11 @@ button:hover {
 
 /* Mobile responsiveness */
 @media screen and (max-width: 600px) {
-  .login-page {
-    width: 90%;
-    height: auto;
-    padding: 20px;
-    border-radius: 20px;
+  .signup-page {
+    padding: 10px; /* Adjust padding for smaller screens */
+    width: 90%; /* Adjust width for smaller screens */
   }
+
 
   .form-group input {
     width: calc(100% - 30px);
