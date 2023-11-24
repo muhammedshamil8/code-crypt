@@ -17,18 +17,21 @@
         Taskify
       </div>
       <ul class="nav-bar">
-        <li :class="{ 'active': $route.path === '/dashboard' }"><img src="../../../public/griddashboard.svg" alt=""
-            class=""> <router-link to="/dashboard" class="link">Dash Board</router-link></li>
-        <li :class="{ 'active': $route.path === '/createtask' }"><img src="../../../public/createtask.svg" alt=""
-            class=""><router-link to="/createtask" class="link">Create Task</router-link></li>
-        <li :class="{ 'active': $route.path === '/project' }"><img src="../../../public/project.svg" alt=""
-            class=""><router-link to="/project" class="link">Project</router-link></li>
-        <li :class="{ 'active': $route.path === '/calender' }"><img src="../../../public/calender.svg" alt=""
-            class=""><router-link to="/calender" class="link">Calender</router-link></li>
-        <li :class="{ 'active': $route.path === '/about' }"><img src="../../../public/about.svg" alt=""
-            class=""><router-link to="/about" class="link">About</router-link></li>
-        <li :class="{ 'active': $route.path === '/connect' }"><img src="../../../public/contact.svg" alt=""
-            class=""><router-link to="/connect" class="link" :class="{ 'active-link': $route.path === '/calender' }">Contact us</router-link></li>
+        <li><img src="../../../public/griddashboard.svg" alt="" class=""> <router-link to="/dashboard" class="link"
+            :class="{ 'active-link': $route.name === 'dashboard' }">Dash
+            Board</router-link></li>
+        <li><img src="../../../public/createtask.svg" alt="" class=""><router-link to="/createtask" class="link"
+            :class="{ 'active-link': $route.name === 'createtask' }">Create
+            Task</router-link></li>
+        <li><img src="../../../public/project.svg" alt="" class=""><router-link to="/project" class="link"
+            :class="{ 'active-link': $route.name === 'project' }">Project</router-link></li>
+        <li><img src="../../../public/calender.svg" alt="" class=""><router-link to="/calender"
+            class="link">Calender</router-link></li>
+        <li><img src="../../../public/about.svg" alt="" class=""><router-link to="/about" class="link"
+            :class="{ 'active-link': $route.name === 'calender' }">About</router-link>
+        </li>
+        <li><img src="../../../public/contact.svg" alt="" class=""><router-link to="/connect" class="link"
+            :class="{ 'active-link': $route.path === '/calender' }">Contact us</router-link></li>
       </ul>
       <div>
         <button>Log out</button>
@@ -189,20 +192,25 @@ aside {
   overflow-y: auto;
   /* Add vertical scroll when content overflows */
 }
+
 .nav-bar>li.active,
 .nav-bar>li:hover {
   color: orange;
   /* Add any additional styling for the active item */
 }
-.nav-bar > .active{
+
+.nav-bar>.active {
   color: orange;
 }
+
 .active-link {
   color: orange;
   /* Add any additional styling for the active link */
 }
-.link{
+
+.link {
   color: #fff;
   text-decoration: none;
 }
+
 </style>
