@@ -1,17 +1,18 @@
 <!-- InputField.vue -->
 <template>
-    <div>
-      <label :for="name">{{ label }}</label>
-      <br />
-      <input
-        :type="type"
-        :id="name"
-        :name="name"
-        :placeholder="placeholder"
-        v-model="inputValue"
-      />
-    </div>
-  </template>
+  <div class="container2">
+     <label :for="name" class="label-container">{{ label }}</label>
+     <br/>
+     <input
+     class="input"
+       :type="type"
+       :id="name"
+       :name="name"
+       :placeholder="placeholder"
+       v-model="inputValue"
+     />
+  </div>
+ </template>
   
   <script>
   export default {
@@ -44,3 +45,24 @@
   };
   </script>
   
+<style scoped>
+.label-container {
+   display: flex;
+   align-items: center;
+   justify-content: start;
+   padding-top: 5px;
+  }
+
+.container2{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.input {
+  width: 453px;
+  height: 40px;
+  border-radius: 10px;
+  border:none;
+  background-color: #d9d9d9;
+}
+</style>

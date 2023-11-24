@@ -1,65 +1,87 @@
 <template>
-  <div>
-    <h1>Register</h1>
-    <form @submit.prevent="registerUser">
-      <label for="username">Username:</label>
-      <input v-model="formData.username" type="text" id="username" name="username" required>
-
-      <label for="email">Email:</label>
-      <input v-model="formData.email" type="email" id="email" name="email" required>
-
-      <label for="password">Password:</label>
-      <input v-model="formData.password" type="password" id="password" name="password" required>
-
-      <label for="passwordConfirm">Confirm Password:</label>
-      <input v-model="formData.passwordConfirm" type="password" id="passwordConfirm" name="passwordConfirm" required>
-      <br />
-
-      <button type="submit">Register</button>
-    </form>
+  <div class="container">
+     <form @submit.prevent="signup">
+       <div class="box">
+         <h2>Signup for free</h2>
+         
+         <div class="details">
+           <InputField label="Name" name="Name" type="text" v-model="name" />
+           <InputField label="Email" name="Email" type="text" v-model="email" />
+           <InputField label="Password" name="Password" type="password" v-model="password" />
+           <InputField label="Confirm Password" name="ConfirmPassword" type="password" v-model="confirm_passoword" />
+         </div>
+ 
+         <button type="submit" class="signup-btn">Sign up</button>
+         <router-link to="/login" class="login-link">Don't you have an account? Login</router-link>
+       </div>
+     </form>
   </div>
-</template>
-
-<script>
-export default {
+ </template>
+ 
+ <script>
+ import InputField from '../components/viewTools/InputFields.vue';
+ export default {
   name: 'Signup',
+  components: {
+     InputField,
+  },
   data() {
-    return {
-      formData: {
-        username: '',
-        email: '',
-        password: '',
-        passwordConfirm: '', 
-      },
-    };
+     return {
+       name: '',
+       email: '',
+       password: '',
+       confirm_passoword: '',
+     };
   },
   methods: {
-    async registerUser() {
-      try {
-        const response = await fetch('http://localhost:9000/api/register', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            username: this.formData.username,
-            email: this.formData.email,
-            password: this.formData.password,
-            passwordConfirm: this.formData.passwordConfirm,
-          }),
-        });
-
-        const data = await response.json();
-
-        if (data.status === 1) {
-          this.$router.push('/login');
-        } else {
-          console.error('Registration failed:', data.message);
-        }
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    },
+     signup() {
+       // Here, you can add the logic to handle the signup
+       // For example, make an API request, validate input, etc.
+       // For simplicity, let's just log the input values for now.
+       console.log('Signing up with:', this.name, this.email, this.password);
+ 
+       // Assuming successful signup, navigate to the dashboard
+       this.$router.push('/dashboard');
+     },
   },
-};
-</script>
+ };
+ </script>
+ 
+ <style scoped>
+ .box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 80vh;
+  width: 50vw;
+  background-color: #fffedd;
+  border-radius: 52px;
+ }
+ .container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #000000;
+ }
+
+ .signup-btn{
+  background-color: orange;
+  color: white;
+  width: 64%;
+  height: 40px;
+  margin-bottom: 20px;
+  margin-top: 40px;
+  border: none;
+  border-radius: 10px;
+  font-size: 20px;
+  padding: 6px;
+ }
+
+ .login-link {
+  color: #000000;
+  text-decoration: none;
+  font-size: 14px;
+  margin-top: 10px;
+ }
+ </style>
