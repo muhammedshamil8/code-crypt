@@ -64,6 +64,68 @@ app.post('/api/register', async (req, res) => {
   }
 });
 
+
+
+
+
+// creating task and project
+
+// Task creation endpoint
+app.post('/api/create-task', async (req, res) => {
+  try {
+    const { user_id, title, startDate, endDate, taskType, priority, description, selectedProject } = req.body;
+
+    // Your existing task creation logic here
+    // ...
+
+    // Example placeholder logic
+    // const checkTaskQuery = "SELECT user_id FROM event WHERE user_id = ? AND task_name = ?";
+    // const checkTaskStmt = db.promise().execute(checkTaskQuery, [user_id, title]);
+    // const [taskResult] = await checkTaskStmt;
+
+    // if (taskResult && taskResult.length > 0) {
+    //   return res.json({ status: 0, message: 'Task with the same title already exists for this user' });
+    // }
+
+    // const insertTaskQuery = "INSERT INTO event (user_id, task_name, start_date, end_date, task_type, priority, description, task_progress, task_done, project_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, 0, 0, ?, NOW(), NOW())";
+    // const insertTaskStmt = db.promise().execute(insertTaskQuery, [user_id, title, startDate, endDate, taskType, priority, description, selectedProject]);
+    // await insertTaskStmt;
+
+    return res.json({ status: 1, message: 'Task created successfully' });
+  } catch (error) {
+    console.error('Error:', error);
+    return res.status(500).json({ status: 0, message: 'Internal Server Error' });
+  }
+});
+
+// Project creation endpoint
+app.post('/api/create-project', async (req, res) => {
+  try {
+    const { user_id, projectName, projectDescription } = req.body;
+
+    // Your existing project creation logic here
+    // ...
+
+    // Example placeholder logic
+    // const checkProjectQuery = "SELECT project_id FROM project WHERE user_id = ? AND project_name = ?";
+    // const checkProjectStmt = db.promise().execute(checkProjectQuery, [user_id, projectName]);
+    // const [projectResult] = await checkProjectStmt;
+
+    // if (projectResult && projectResult.length > 0) {
+    //   return res.json({ status: 0, message: 'Project with the same name already exists for this user' });
+    // }
+
+    // const insertProjectQuery = "INSERT INTO project (user_id, project_name, project_description) VALUES (?, ?, ?)";
+    // const insertProjectStmt = db.promise().execute(insertProjectQuery, [user_id, projectName, projectDescription]);
+    // await insertProjectStmt;
+
+    return res.json({ status: 1, message: 'Project created successfully' });
+  } catch (error) {
+    console.error('Error:', error);
+    return res.status(500).json({ status: 0, message: 'Internal Server Error' });
+  }
+});
+
 const PORT = 9000;
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
