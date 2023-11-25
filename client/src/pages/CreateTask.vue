@@ -162,6 +162,15 @@ export default {
 </script>
 
 <style scoped>
+input{
+  padding: 10px;
+  border-radius: 5px;
+}
+select{
+  padding: 10px;
+  border-radius: 5px;
+
+}
 .create-task-container {
   max-width: 600px;
   margin: 0 auto;
@@ -197,6 +206,8 @@ label {
 
 textarea {
   resize: vertical;
+  border-radius: 5px;
+
 }
 
 .add-button {
