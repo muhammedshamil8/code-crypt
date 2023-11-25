@@ -1,37 +1,33 @@
 <template>
-  <div class="body">
-  <div class="full-frame">
-    <div class="signup-page">
-      <div class="heading"><h2>Sign up for free</h2></div>
-      <form @submit.prevent="signup">
-        <div class="form-group">
-          <label for="name">Name</label>
-          <input type="text" id="name" v-model="name" required />
-        </div>
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" v-model="email" required />
-        </div>
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input type="password" id="password" v-model="password" required />
-        </div>
-        <div class="form-group">
-          <label for="confirm-password">Confirm Password</label>
-          <input type="password" id="confirm-password" v-model="confirmPassword" required />
-        </div>
-        <div class="form-group-button">
-          <button type="submit">Sign Up</button>
-        </div>
-      </form>
-      <div class="create-account">
-        <p>Already have an account?
-          <router-link to="/login">Login</router-link>
-        </p>
+  <div class="signup-container">
+    <form @submit.prevent="registerUser" class="signup-form">
+      <h2>Sign Up for Free</h2>
+
+      <div class="form-group">
+        <label for="username">Username:</label>
+        <input type="text" id="username" v-model="formData.username" required />
       </div>
-    </div>
+      
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" v-model="formData.email" required />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="password" id="password" v-model="formData.password" required />
+      </div>
+
+      <div class="form-group">
+        <label for="passwordConfirm">Confirm Password:</label>
+        <input type="password" id="passwordConfirm" v-model="formData.passwordConfirm" required />
+      </div>
+
+      <button type="submit">Sign Up</button>
+      <p>Already have an account? <router-link to="/login">Login</router-link></p>
+      <p v-if="error" class="error-message">{{ error }}</p>
+    </form>
   </div>
-</div>
 </template>
 
 <script>
@@ -90,7 +86,6 @@ export default {
 };
 </script>
 
-
 <style>
 /* Global styles */
 .body {
@@ -109,66 +104,54 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100vh;
+  background-color: #f1f1f1; /* Light gray background */
 }
 
-/* Styling for the login-page container */
-.signup-page {
-  padding: 50px;
-  flex-direction: column;
-  border-radius: 40px;
-  background-color: white;
-  width: 380px;
-  height: 420px;
-  padding-top: 30px;
+.signup-form {
+  width: 300px;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #ffffff; /* White background */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.heading{
-  padding-bottom: 20px;
-  font-size: 15px;
+h2 {
   text-align: center;
-}
-/* Styling for form groups */
-.form-group {
-  margin-bottom: 15px;
+  color: #333; /* Dark gray text */
 }
 
-/* Styling for input fields */
-.form-group input {
-  border-radius: 3px;
+label {
+  display: block;
+  margin-top: 10px;
+  color: #555; /* Medium gray text */
+}
+
+input {
   width: 100%;
-  height: 25px;
-  border-color: black;
-  padding-left: 5px;
-  padding-right: 20px;
-  border-radius: 5px; /* Adjust the border radius as needed */
-  border: 2px solid #ccc; /* Thin border with color #ccc */
+  padding: 8px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
 }
 
 /* Styling for the login button */
 button {
   width: 100%;
   padding: 10px;
-  margin: auto;
-  background-color: #F36804;
-  border-radius: 10px;
-  color: white;
+  background-color: #3498db; /* Blue button color */
+  color: #ffffff; /* White text */
   border: none;
   cursor: pointer;
 }
 
 button:hover {
-  background-color: #CC5500;
+  background-color: #0056b3; /* Darker blue on hover */
 }
 
-/* Styling for the h2 element */
-.login-page h2 {
-  text-align: center;
-  font-size: 24px;
-}
-
-/* Styling for create-account section */
-.create-account {
-  margin-top: 15px;
+.error-message {
+  color: #e74c3c; /* Red error text */
+  margin-top: 10px;
   text-align: center;
   font-size: 12px;
 }
