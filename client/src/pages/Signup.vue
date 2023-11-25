@@ -1,84 +1,204 @@
-
 <template>
-  <div class="container">
-    <form @submit.prevent="signup">
-      <div class="box">
-        <h2>Signup for free</h2>
-        <p class="signup-message">{{ message }}</p>
-        <div class="details">
-          <input label="Name" name="Name" type="text" v-model="username" />
-          <input label="Email" name="Email" type="text" v-model="email" />
-          <input label="Password" name="Password" type="password" v-model="password" />
-          <input
-            label="Confirm Password"
-            name="ConfirmPassword"
-            type="password"
-            v-model="passwordConfirm"
-          />
+  <div class="body">
+  <div class="full-frame">
+    <div class="signup-page">
+      <div class="heading"><h2>Sign up for free</h2></div>
+      <form @submit.prevent="signup">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" id="name" v-model="name" required />
         </div>
-
-        <button type="submit" class="signup-btn">Sign up</button>
-        <router-link to="/login" class="login-link">Don't you have an account? Login</router-link>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" v-model="email" required />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" v-model="password" required />
+        </div>
+        <div class="form-group">
+          <label for="confirm-password">Confirm Password</label>
+          <input type="password" id="confirm-password" v-model="confirmPassword" required />
+        </div>
+        <div class="form-group-button">
+          <button type="submit">Sign Up</button>
+        </div>
+      </form>
+      <div class="create-account">
+        <p>Already have an account?
+          <router-link to="/login">Login</router-link>
+        </p>
       </div>
-    </form>
+    </div>
   </div>
+</div>
 </template>
 
 <script>
-import axios from 'axios';
 import InputField from '../components/viewTools/InputFields.vue';
-
 export default {
-  name: 'Signup',
-  components: {
-    InputField,
-  },
   data() {
     return {
-      username: '',
-      email: '',
-      password: '',
-      passwordConfirm: '',
-      message: '',
+      formData: {
+        username: '',
+        email: '',
+        password: '',
+        passwordConfirm: '',
+      },
+      isLoading: false,
+      registrationMessage: '',
     };
   },
   methods: {
-    async signup() {
-      // Add validation to check if required fields are not empty
-      if (!this.username || !this.email || !this.password || !this.passwordConfirm) {
-        this.message = 'Fill all the fields';
-        return;
-      }
+  async registerUser() {
+    try {
+      this.isLoading = true;
+      const response = await fetch('http://localhost:9000/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: this.formData.username,
+          email: this.formData.email,
+          password: this.formData.password,
+          passwordConfirm: this.formData.passwordConfirm,
+        }),
+      });
 
-      try {
-        const response = await axios.post('http://localhost:9000/api/register', {
-          username: this.username,
-          email: this.email,
-          password: this.password,
-          passwordConfirm: this.passwordConfirm,
-        });
+      const data = await response.json();
 
-        if (response.data.status === 1) {
-          // Registration successful, perform necessary actions (e.g., redirect)
-          console.log('Registered Successfully', response.data.userId);
+      if (data.status === 1) {
+        this.registrationMessage = 'Registration successful!';
+        setTimeout(() => {
           this.$router.push('/login');
-        } else {
-          // Display error message to the user
-          this.message = 'Signup failed: ' + response.data.message;
-          console.error('Signup failed:', response.data.message);
-        }
-      } catch (error) {
-        this.message = 'Signup failed: ' + error.message;
-        console.error('Error:', error);
-        // Handle other errors (e.g., network error)
+        }, 3000);
+      } else {
+        this.registrationMessage = `${data.message}`;
       }
-
-      console.log('Signing up with:', this.username, this.email, this.password);
-    },
+    } catch (error) {
+      // Change 'this.message' to 'this.registrationMessage'
+      this.registrationMessage = 'Signup failed: ' + error.message;
+      console.error('Error:', error);
+      this.registrationMessage = 'An error occurred during registration. Please try again.';
+    } finally {
+      this.isLoading = false;
+    }
   },
+},
+
 };
 </script>
 
-<style scoped>
-/* Your styles go here */
+
+<style>
+/* Global styles */
+.body {
+  background-color: black;
+  height: 100vh;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Styling for the full-frame container */
+.full-frame {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Styling for the login-page container */
+.signup-page {
+  padding: 50px;
+  flex-direction: column;
+  border-radius: 40px;
+  background-color: white;
+  width: 380px;
+  height: 420px;
+  padding-top: 30px;
+}
+
+.heading{
+  padding-bottom: 20px;
+  font-size: 15px;
+  text-align: center;
+}
+/* Styling for form groups */
+.form-group {
+  margin-bottom: 15px;
+}
+
+/* Styling for input fields */
+.form-group input {
+  border-radius: 3px;
+  width: 100%;
+  height: 25px;
+  border-color: black;
+  padding-left: 5px;
+  padding-right: 20px;
+  border-radius: 5px; /* Adjust the border radius as needed */
+  border: 2px solid #ccc; /* Thin border with color #ccc */
+}
+
+/* Styling for the login button */
+button {
+  width: 100%;
+  padding: 10px;
+  margin: auto;
+  background-color: #F36804;
+  border-radius: 10px;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #CC5500;
+}
+
+/* Styling for the h2 element */
+.login-page h2 {
+  text-align: center;
+  font-size: 24px;
+}
+
+/* Styling for create-account section */
+.create-account {
+  margin-top: 15px;
+  text-align: center;
+  font-size: 12px;
+}
+
+.create-account a {
+  color: rgb(0, 140, 255);
+  text-decoration: none;
+  font-size: 12px;
+}
+
+.create-account a:hover {
+  text-decoration: underline;
+}
+
+/* Mobile responsiveness */
+@media screen and (max-width: 600px) {
+  .signup-page {
+    padding: 10px; /* Adjust padding for smaller screens */
+    width: 90%; /* Adjust width for smaller screens */
+  }
+
+  .form-group input {
+    width: calc(100% - 30px);
+    max-width: calc(100% - 30px);
+    margin: 0;
+  }
+
+  .forgot-password,
+  .create-account {
+    margin-top: 10px;
+  }
+}
 </style>

@@ -22,9 +22,74 @@ db.connect((err) => {
   }
   console.log('Connected to MySQL');
 });
+// Fetch tasks for a user
+app.get('/api/users/:userId', async (req, res) => {
+  const userId = req.params.userId;
+
+  try {
+    // Query tasks for the specific user using userId
+    // Modify this query based on your database structure
+    const [tasks] = await db.promise().query('SELECT * FROM users WHERE user_id = ?', [userId]);
+
+    res.json(tasks);
+  } catch (error) {
+    console.error('Error fetching tasks:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Add this route in your Express.js server
+app.get('/api/tasks/', async (req, res) => {
+  // const userId = req.params.userId;
+
+  try {
+    // Query tasks for the specific user using userId
+    // Modify this query based on your database structure
+    const [tasks] = await db.promise().query('SELECT * FROM event');
+
+    res.json(tasks);
+  } catch (error) {
+    console.error('Error fetching tasks:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
 
-//register user
+
+// User login endpoint
+app.post('/api/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ status: 0, message: 'All fields must be filled' });
+    }
+
+    const getUserQuery = 'SELECT id, password FROM users WHERE email = ?';
+    const [userRows] = await db.promise().execute(getUserQuery, [email]);
+
+    if (userRows.length === 0) {
+      return res.status(401).json({ status: 0, message: 'User not found' });
+    }
+
+    const hashedPassword = userRows[0].password;
+    const userId = userRows[0].id;
+
+    const isPasswordValid = await bcrypt.compare(password, hashedPassword);
+
+    if (isPasswordValid) {
+      return res.json({ status: 1, message: 'Login successful', userId });
+    } else {
+      return res.status(401).json({ status: 0, message: 'Invalid password' });
+    }
+  } catch (err) {
+    console.error('Error:', err);
+    return res.status(500).json({ status: 0, message: 'Internal Server Error' });
+  }
+});
+
+
+// register
 app.post('/api/register', async (req, res) => {
   try {
     const { username, email, password, passwordConfirm } = req.body;
@@ -66,10 +131,12 @@ app.post('/api/register', async (req, res) => {
   }
 });
 
-// login user
-app.post('/api/login', async (req, res) => {
+
+// Task creation endpoint
+app.post('/api/create-task', async (req, res) => {
   try {
     const { email, password: providedPassword } = req.body; // Rename 'password' to 'providedPassword'
+    username = req.body.email;
 
     if (!email || !providedPassword) {
       return res.json({ status: 100, message: 'All fields must be filled' });
@@ -83,15 +150,7 @@ app.post('/api/login', async (req, res) => {
       const isPasswordMatch = await bcrypt.compare(providedPassword, hashedPassword);
 
       if (isPasswordMatch) {
-        // Store user ID in local storage
-        const userId = rows[0].id;
-
-        // Example of storing user ID in local storage
-        // Note: This should be done on the client side (e.g., in your React or Angular app)
-        // You can use JavaScript to set an item in local storage
-        localStorage.setItem('userId', userId);
-
-        return res.json({ status: 1, message: 'Login successful', userId });
+        return res.json({ status: 1, message: 'Login successful', userId: rows[0].id });
       } else {
         return res.json({ status: 0, message: 'Invalid credentials' });
       }
@@ -105,18 +164,37 @@ app.post('/api/login', async (req, res) => {
 });
 
 
-//get all signups
-app.get('/api/signups', async (req, res) => {
+
+
+// Project creation endpoint
+app.post('/api/create-project', async (req, res) => {
   try {
-    const selectAllQuery = 'SELECT * FROM users';
-    const [rows] = await db.promise().execute(selectAllQuery);
-    return res.json({ status: 200, message: 'Success', data: rows });
-  } catch (err) {
-    console.error('Error:', err);
+    const { user_id, projectName, projectDescription } = req.body;
+
+    // Your existing project creation logic here
+    // ...
+
+    // Example placeholder logic
+    const checkProjectQuery = "SELECT project_id FROM project WHERE user_id = ? AND project_name = ?";
+    const checkProjectStmt = db.promise().execute(checkProjectQuery, [user_id, projectName]);
+    const [projectResult] = await checkProjectStmt;
+
+    if (projectResult && projectResult.length > 0) {
+      return res.json({ status: 0, message: 'Project with the same name already exists for this user' });
+    }
+
+    const insertProjectQuery = "INSERT INTO project (user_id, project_name, project_description) VALUES (?, ?, ?)";
+    const insertProjectStmt = db.promise().execute(insertProjectQuery, [user_id, projectName, projectDescription]);
+    await insertProjectStmt;
+
+    return res.json({ status: 1, message: 'Project created successfully' });
+  } catch (error) {
+    console.error('Error:', error);
     return res.status(500).json({ status: 0, message: 'Internal Server Error' });
   }
-}
-)
+});
+
+
 const PORT = 9000;
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);

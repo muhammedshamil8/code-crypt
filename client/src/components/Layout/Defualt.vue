@@ -1,5 +1,6 @@
 <!-- DefaultLayout.vue -->
 <template>
+ 
   <div class="defualt-layout">
     <header>
       <div class="header-right-section">
@@ -15,6 +16,7 @@
     <aside>
       <div class="taskify-logo">
         Taskify
+        {{ userData && userData.username }}
       </div>
       <ul class="nav-bar">
         <li><img src="../../../public/griddashboard.svg" alt="" class=""> <router-link to="/dashboard" class="link"
@@ -34,20 +36,47 @@
             :class="{ 'active-link': $route.path === '/calender' }">Contact us</router-link></li>
       </ul>
       <div>
-        <button>Log out</button>
+        <button @click="logout">Log out</button>
       </div>
     </aside>
     <div class="main-content">
       <router-view name="main" />
     </div>
-
+    <p v-if="isAuthenticated">Authenticated content</p>
+  <p v-else>Not authenticated. Redirecting...</p>
   </div>
 </template>
   
 <script>
+import { authMixin } from '../../authMixin';
+
 export default {
-  name: 'DefaultLayout',
-}
+  mixins: [authMixin],
+  data() {
+    return {
+      userData: null,
+    };
+  },
+  methods: {
+    logout() {
+      localStorage.removeItem('user_id');
+      this.$router.push('/login');
+    },
+    async fetchUserData(userId) {
+      try {
+        const response = await this.$axios.get(`http://localhost:9000/api/user/${userId}`);
+        this.userData = response.data;
+        console.log(this.userData)
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    },
+  },
+  mounted() {
+    const userId = localStorage.getItem('user_id');
+    this.fetchUserData(userId);
+  },
+};
 </script>
 <style scoped>
 * {
@@ -212,5 +241,4 @@ aside {
   color: #fff;
   text-decoration: none;
 }
-
 </style>
