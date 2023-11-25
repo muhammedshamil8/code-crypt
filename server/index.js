@@ -135,30 +135,34 @@ app.post('/api/register', async (req, res) => {
 // Task creation endpoint
 app.post('/api/create-task', async (req, res) => {
   try {
-    const { user_id, title, startDate, endDate, taskType, priority, description, selectedProject } = req.body;
+    const { email, password: providedPassword } = req.body; // Rename 'password' to 'providedPassword'
+    username = req.body.email;
 
-    
-
-    const checkTaskQuery = "SELECT user_id FROM event WHERE user_id = ? AND task_name = ?";
-    const checkTaskStmt = db.promise().execute(checkTaskQuery, [user_id, title]);
-    const [taskResult] = await checkTaskStmt;
-
-    if (taskResult && taskResult.length > 0) {
-      return res.json({ status: 0, message: 'Task with the same title already exists for this user' });
+    if (!email || !providedPassword) {
+      return res.json({ status: 100, message: 'All fields must be filled' });
     }
 
-    const insertTaskQuery = "INSERT INTO event (user_id, task_name, start_date, end_date, task_type, priority, description, task_progress, task_done, project_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, 0, 0, ?, NOW(), NOW())";
+    const checkUsernameQuery = 'SELECT * FROM users WHERE email = ?';
+    const [rows] = await db.promise().execute(checkUsernameQuery, [email]);
 
-    const insertTaskStmt = db.promise().execute(insertTaskQuery, [user_id, title, startDate, endDate, taskType, priority, description, selectedProject || null]);
+    if (rows.length > 0) {
+      const hashedPassword = rows[0].password;
+      const isPasswordMatch = await bcrypt.compare(providedPassword, hashedPassword);
 
-    await insertTaskStmt;
-
-    return res.json({ status: 1, message: 'Task created successfully' });
-  } catch (error) {
-    console.error('Error:', error);
+      if (isPasswordMatch) {
+        return res.json({ status: 1, message: 'Login successful', userId: rows[0].id });
+      } else {
+        return res.json({ status: 0, message: 'Invalid credentials' });
+      }
+    } else {
+      return res.json({ status: 0, message: 'Invalid credentials' });
+    }
+  } catch (err) {
+    console.error('Error:', err);
     return res.status(500).json({ status: 0, message: 'Internal Server Error' });
   }
 });
+
 
 
 
@@ -195,3 +199,58 @@ const PORT = 9000;
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
+
+
+
+//create all tasks
+app.get('/api/create-task', async (req, res) => {
+  try {
+    const {taskName, startDate, endDate, taskType, priority, description} = req.body;
+
+    const selectAllQuery = 'SELECT * FROM tasks';
+    const [rows] = await db.promise().execute(selectAllQuery);
+    return res.json({ status: 200, message: 'Success', data: rows });
+  } catch (err) {
+    console.error('Error:', err);
+    return res.status(500).json({ status: 0, message: 'Internal Server Error' });
+  }
+}
+)
+
+app.post('/api/create-task', async (req, res) => {
+    try {
+      const { userId, title, startDate, endDate, taskType, priority, description, selectedProject } = req.body;
+
+      if (!title || !startDate || !endDate) {
+        return res.json({ status: 0, message: 'All fields must be filled' });
+      } else if (title.length < 5 || title.length > 15) {
+        return res.json({ status: 0, message: 'Task title must contain between 5 and 15 characters' });
+      }
+
+      const checkTaskQuery = 'SELECT user_id FROM event WHERE user_id = ? AND task_name = ?';
+      const [taskRows] = await db.promise().execute(checkTaskQuery, [userId, title]);
+
+      if (taskRows.length > 0) {
+        return res.json({ status: 0, message: 'Task with the same title already exists for this user' });
+      }
+      const priorityMap = {
+        'High': 1,
+        'Medium': 2,
+        'Low': 3
+      };
+      
+      const priorityValue = priorityMap[priority];
+      const insertTaskQuery = `INSERT INTO event(user_id, task_name, start_date, end_date, task_type, priority, description, task_progress, task_done, project_id, created_at, updated_at)VALUES(?, ?, ?, ?, ?, ?, ?, 0, 0, ?, NOW(), NOW())`;
+
+      const [results] = await db.promise().execute(insertTaskQuery, [userId, title, startDate, endDate, taskType, priorityValue, description, selectedProject || null]);
+
+      if (results && results.insertId) {
+        return res.json({ status: 1, message: 'Task created successfully' });
+      } else {
+        return res.json({ status: 0, message: 'Failed to create the task' });
+      }
+    } catch (err) {
+      console.error('Error:', err);
+      return res.status(500).json({ status: 0, message: 'Internal Server Error' });
+    }
+  });

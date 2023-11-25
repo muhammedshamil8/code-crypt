@@ -31,6 +31,7 @@
 </template>
 
 <script>
+import InputField from '../components/viewTools/InputFields.vue';
 export default {
   data() {
     return {
@@ -40,49 +41,66 @@ export default {
         password: '',
         passwordConfirm: '',
       },
-      error: '',
+      isLoading: false,
+      registrationMessage: '',
     };
   },
   methods: {
-    async registerUser() {
-      try {
-        this.error = ''; // Clear previous errors
+  async registerUser() {
+    try {
+      this.isLoading = true;
+      const response = await fetch('http://localhost:9000/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: this.formData.username,
+          email: this.formData.email,
+          password: this.formData.password,
+          passwordConfirm: this.formData.passwordConfirm,
+        }),
+      });
 
-        const response = await fetch('http://localhost:9000/api/register', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(this.formData),
-        });
+      const data = await response.json();
 
-        const data = await response.json();
-
-        if (data.status === 1) {
-          console.log('Registration successful!');
-          this.clearForm(); 
-          alert('Registration successful!')// Clear form fields on successful registration
-          this.$router.push('/dashboard'); // Navigate to the dashboard page
-        } else {
-          this.error = data.message;
-        }
-      } catch (error) {
-        console.error('Error:', error);
-        this.error = 'An error occurred during registration. Please try again.';
+      if (data.status === 1) {
+        this.registrationMessage = 'Registration successful!';
+        setTimeout(() => {
+          this.$router.push('/login');
+        }, 3000);
+      } else {
+        this.registrationMessage = `${data.message}`;
       }
-    },
-    clearForm() {
-      this.formData.username = '';
-      this.formData.email = '';
-      this.formData.password = '';
-      this.formData.passwordConfirm = '';
-    },
+    } catch (error) {
+      // Change 'this.message' to 'this.registrationMessage'
+      this.registrationMessage = 'Signup failed: ' + error.message;
+      console.error('Error:', error);
+      this.registrationMessage = 'An error occurred during registration. Please try again.';
+    } finally {
+      this.isLoading = false;
+    }
   },
+},
+
 };
 </script>
 
-<style scoped>
-.signup-container {
+<style>
+/* Global styles */
+.body {
+  background-color: black;
+  height: 100vh;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Styling for the full-frame container */
+.full-frame {
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -126,17 +144,15 @@ input {
   margin-top: 5px;
   margin-bottom: 10px;
   box-sizing: border-box;
-  border: 1px solid #ced4da; /* Light gray border */
-  border-radius: 4px;
 }
 
+/* Styling for the login button */
 button {
   width: 100%;
   padding: 10px;
-  background-color: #007bff; /* Blue button color */
+  background-color: #3498db; /* Blue button color */
   color: #ffffff; /* White text */
   border: none;
-  border-radius: 5px;
   cursor: pointer;
 }
 
@@ -145,8 +161,38 @@ button:hover {
 }
 
 .error-message {
-  color: #dc3545; /* Red error text */
+  color: #e74c3c; /* Red error text */
   margin-top: 10px;
   text-align: center;
+  font-size: 12px;
+}
+
+.create-account a {
+  color: rgb(0, 140, 255);
+  text-decoration: none;
+  font-size: 12px;
+}
+
+.create-account a:hover {
+  text-decoration: underline;
+}
+
+/* Mobile responsiveness */
+@media screen and (max-width: 600px) {
+  .signup-page {
+    padding: 10px; /* Adjust padding for smaller screens */
+    width: 90%; /* Adjust width for smaller screens */
+  }
+
+  .form-group input {
+    width: calc(100% - 30px);
+    max-width: calc(100% - 30px);
+    margin: 0;
+  }
+
+  .forgot-password,
+  .create-account {
+    margin-top: 10px;
+  }
 }
 </style>
