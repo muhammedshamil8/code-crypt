@@ -92,12 +92,13 @@ export default {
 .p{
   color: #ffffff;
   margin: 3px;
+  margin-top: 10px;
 }
 .link{
-  color: blue;
+  color: rgb(14, 82, 172);
 }
 .signup-form {
-  width: 300px;
+  width: 340px;
   padding: 20px;
   border-radius: 8px;
   background-color: #312c2c; /* White background */
