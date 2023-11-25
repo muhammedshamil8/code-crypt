@@ -3,32 +3,35 @@
   <div class="full-frame">
     <div class="signup-page">
       <div class="heading"><h2>Sign up for free</h2></div>
-      <form @submit.prevent="registerUser" class="signup-form">
-        <div class="form-group">
-          <label for="username">Username</label>
-          <input type="text" id="name" v-model="name" required />
-        </div>
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" v-model="email" required />
-        </div>
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input type="password" id="password" v-model="password" required />
-        </div>
-        <div class="form-group">
-          <label for="confirm-password">Confirm Password</label>
-          <input type="password" id="confirm-password" v-model="confirmPassword" required />
-        </div>
-        <div class="form-group-button">
-          <button type="submit">Sign Up</button>
-          <p class="p">Already have an account? <router-link to="/login" class="link">Login</router-link></p>
-      <p v-if="error" class="error-message">{{ error }}</p>
-        </div>
-      </form>
+    <form @submit.prevent="registerUser" class="signup-form">
+
+      <div class="form-group">
+        <label for="username">Username:</label>
+        <input type="text" id="username" v-model="formData.username" required />
       </div>
-    </div>
-</div>
+      
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" v-model="formData.email" required />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="password" id="password" v-model="formData.password" required />
+      </div>
+
+      <div class="form-group">
+        <label for="passwordConfirm">Confirm Password:</label>
+        <input type="password" id="passwordConfirm" v-model="formData.passwordConfirm" required />
+      </div>
+
+      <button type="submit">Sign Up</button>
+      <p class="p">Already have an account? <router-link to="/login" class="link">Login</router-link></p>
+      <p v-if="error" class="error-message">{{ error }}</p>
+    </form>
+  </div>
+  </div>
+  </div>
 </template>
 
 <script>
@@ -88,113 +91,125 @@ export default {
 </script>
 
 <style>
-/* Global styles */
-.body {
-  background-color: black;
-  height: 100vh;
-  margin: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: 'Inter', sans-serif;
-}
-
-/* Styling for the full-frame container */
-.full-frame {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-/* Styling for the login-page container */
-.signup-page {
-  padding: 50px;
-  flex-direction: column;
-  border-radius: 40px;
-  background-color: white;
-  width: 380px;
-  height: 420px;
-  padding-top: 30px;
-}
-
-.heading{
-  padding-bottom: 20px;
-  font-size: 15px;
-  text-align: center;
-}
-/* Styling for form groups */
-.form-group {
-  margin-bottom: 15px;
-}
-
-/* Styling for input fields */
-.form-group input {
-  border-radius: 3px;
-  width: 100%;
-  height: 25px;
-  border-color: black;
-  padding-left: 5px;
-  padding-right: 20px;
-  border-radius: 5px; /* Adjust the border radius as needed */
-  border: 2px solid #ccc; /* Thin border with color #ccc */
-}
-
-/* Styling for the login button */
-button {
-  width: 100%;
-  padding: 10px;
-  margin: auto;
-  background-color: #F36804;
-  border-radius: 10px;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #CC5500;
-}
-
-/* Styling for the h2 element */
-.login-page h2 {
-  text-align: center;
-  font-size: 24px;
-}
-
-/* Styling for create-account section */
-.create-account {
-  margin-top: 15px;
-  text-align: center;
-  font-size: 12px;
-}
-
-.create-account a {
-  color: rgb(0, 140, 255);
-  text-decoration: none;
-  font-size: 12px;
-}
-
-.create-account a:hover {
-  text-decoration: underline;
-}
-
-/* Mobile responsiveness */
-@media screen and (max-width: 600px) {
-  .signup-page {
-    padding: 10px; /* Adjust padding for smaller screens */
-    width: 90%; /* Adjust width for smaller screens */
-  }
-
-  .form-group input {
-    width: calc(100% - 30px);
-    max-width: calc(100% - 30px);
+  /* Global styles */
+  .body {
+    background-color: black;
+    height: 100vh;
     margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Inter', sans-serif;
   }
-
-  .forgot-password,
+  
+  /* Styling for the full-frame container */
+  .full-frame {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Styling for the login-page container */
+  .signup-page {
+    padding: 50px;
+    flex-direction: column;
+    border-radius: 40px;
+    background-color: white;
+    width: 380px;
+    height: 420px;
+    padding-top: 30px;
+  }
+  
+  .heading{
+    padding-bottom: 20px;
+    font-size: 15px;
+    text-align: center;
+  }
+  /* Styling for form groups */
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  /* Styling for input fields */
+  .form-group input {
+    border-radius: 3px;
+    width: 100%;
+    height: 25px;
+    border-color: black;
+    padding-left: 5px;
+    padding-right: 20px;
+    border-radius: 5px; /* Adjust the border radius as needed */
+    border: 2px solid #ccc; /* Thin border with color #ccc */
+  }
+  
+  /* Styling for the login button */
+  button {
+    width: 100%;
+    padding: 10px;
+    margin: auto;
+    background-color: #F36804;
+    border-radius: 10px;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #CC5500;
+  }
+  
+  /* Styling for the h2 element */
+  .login-page h2 {
+    text-align: center;
+    font-size: 24px;
+  }
+  
+  /* Styling for create-account section */
   .create-account {
-    margin-top: 10px;
+    margin-top: 15px;
+    text-align: center;
+    font-size: 12px;
   }
+  
+  .create-account a {
+    color: rgb(0, 140, 255);
+    text-decoration: none;
+    font-size: 12px;
+  }
+  
+  .create-account a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Mobile responsiveness */
+  @media screen and (max-width: 600px) {
+    .signup-page {
+      padding: 10px; /* Adjust padding for smaller screens */
+      width: 90%; /* Adjust width for smaller screens */
+    }
+  
+    .form-group input {
+      width: calc(100% - 30px);
+      max-width: calc(100% - 30px);
+      margin: 0;
+    }
+    .error-message {
+  color: #e74c3c; /* Red error text */
+  margin-top: 10px;
+  text-align: center;
+  font-size: 12px;
 }
-</style>
+  
+    .forgot-password,
+    .create-account {
+      margin-top: 10px;
+    }
+  }
+  </style>
+.error-message {
+  color: #e74c3c; /* Red error text */
+  margin-top: 10px;
+  text-align: center;
+  font-size: 12px;
+}

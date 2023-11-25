@@ -1,38 +1,32 @@
 <template>
   <div class="body">
-    <div class="full-frame">
-      <div class="login-page">
-        <h2>Login into your account</h2>
-        <p class="message" :class="{ 'success-message': isSuccess, 'error-message': !isSuccess }">
-          {{ message }}
-        </p>
-
-        <form @submit.prevent="login">
-          <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" v-model="email" required :disabled="isLoading" />
-          </div>
-          <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" id="password" v-model="password" required :disabled="isLoading" />
-          </div>
-      
-          <div class="form-group-button">
-           
-            <button type="submit" :disabled="isLoading" class="button">
-              {{ isLoading ? 'Logging in...' : 'Log in' }}
-            </button>
-          </div>
-          <div class="forgot-password">
-              <a href="#">Forgot Password?</a>
-            </div><br />
-        </form>
-        <div class="create-account">
-          <p>Need an account? <router-link to="/signup">Sign up</router-link></p>
+   <div class="full-frame">
+    <div class="login-page">
+      <div class="heading"><h2>Login into your account</h2></div>
+      <form @submit.prevent="login">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" v-model="email" required />
         </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" v-model="password" required />
+        </div>
+        <div class="form-group-button">
+          <div class="forgot-password">
+            <a href="#">Forgot Password?</a>
+          </div>
+          <button type="submit">Log in</button>
+        </div>
+      </form>
+      <div class="create-account">
+        <p>Need an account?
+          <router-link to="/signup">Sign up</router-link>
+        </p>
       </div>
     </div>
   </div>
+</div>
 </template>
 
 <script>
@@ -43,148 +37,169 @@ export default {
     return {
       email: '',
       password: '',
-      message: '',
-      isSuccess: false,
-      isLoading: false,
     };
   },
   methods: {
     async login() {
       try {
-        this.isLoading = true;
         const response = await axios.post('http://localhost:9000/api/login', {
           email: this.email,
           password: this.password,
+          message:''
         });
-
         if (response.data.status === 1) {
-          this.isSuccess = true;
-          this.message = 'Login successful. Redirecting...';
-
-          localStorage.setItem('user_id', response.data.userId);
-          setTimeout(() => {
-            this.$router.push('/dashboard');
-          }, 1500);
+          // Login successful, perform necessary actions (e.g., redirect)
+          console.log('Login successful', response.data.userId);
+          this.$router.push('/dashboard');
         } else {
-          this.message = 'Login failed. Wrong credentials.';
-          this.isSuccess = false;
+          // Display error message to the user
+          this.message = 'Login failed, wrong credentials' ;
+          console.error('Login failed:', response.data.message);
         }
       } catch (error) {
         console.error('Error:', error);
-        this.message = 'An error occurred. Please try again.';
-        this.isSuccess = false;
-      } finally {
-        this.email = '';
-        this.password = '';
-        this.isLoading = false;
-        setTimeout(() => {
-          this.message = '';
-        }, 5000);
+        // Handle other errors (e.g., network error)
       }
     },
   },
 };
 </script>
 
-<style scoped>
+<style>
+/* Global styles */
 .body {
-  background-color: #000000;
+  background-color: black;
+  height: 100vh;
+  margin: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  font-family: 'Inter', sans-serif;
 }
-
-.login-page {
-  background-color: #292626;
-  border-radius: 8px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  width: 300px;
-  text-align: center;
+*{
+  font-family: 'Inter', sans-serif;
 }
-
-h2 {
-  color: #ffffff;
-  font-size: 24px;
-  margin-bottom: 20px;
-}
-
-.message {
-  font-size: 14px;
-  margin: 10px 0;
-}
-
-.success-message {
-  color: #4caf50;
-}
-
-.error-message {
-  color: #f44336;
-}
-
-.form-group {
-  margin-bottom: 15px;
-  text-align: left;
-}
-
-label {
-  display: block;
-  margin-bottom: 5px;
-  font-size: 14px;
-  color: #ffffff;
-}
-
-input {
+/* Styling for the full-frame container */
+.full-frame {
   width: 100%;
-  height: 40px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 8px;
-  box-sizing: border-box;
-  font-size: 14px;
-}
-
-.form-group-button {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
 }
 
-.forgot-password a {
-  color: #007bff;
-  text-decoration: none;
-  font-size: 14px;
+/* Styling for the login-page container */
+.login-page {
+  padding: 50px;
+  flex-direction: column;
+  border-radius: 40px;
+  background-color: white;
+  width: 350px;
+  height: 350px;
+  padding-top: 35px;
+}
+.heading{
+  text-align: center;
+  padding-bottom: 9px;
+  font-size: 15px;
 }
 
-.button {
+/* Styling for form groups */
+.form-group {
+  margin-bottom: 15px;
+}
+
+/* Styling for form-group-button */
+.form-group-button {
+  display: flex;
+  width: 100%;
+  flex-direction: column; /* Align children vertically */
+  align-items: flex-start; /* Align children to the start of the container */
+}
+
+/* Styling for input fields */
+.form-group input {
+  border-radius: 3px;
+  width: 92.5%;
+  height: 25px;
+  border-color: black;
+  padding-left: 5px;
+  padding-right: 20px;
+  border-radius: 5px; /* Adjust the border radius as needed */
+  border: 2px solid #ccc; /* Thin border with color #ccc */
+}
+/* Styling for the login button */
+button {
   width: 100%;
   padding: 10px;
-  background-color: #007bff;
+  margin: auto;
+  background-color: #F36804;
+  border-radius: 10px;
+  color: white;
   border: none;
-  border-radius: 4px;
-  color: #fff;
   cursor: pointer;
-  transition: background-color 0.3s;
 }
 
-.button:hover {
-  background-color: #0056b3;
+button:hover {
+  background-color: #CC5500;
 }
 
+/* Styling for the h2 element */
+.login-page h2 {
+  text-align: center; /* Center the text horizontally */
+  font-size: 20px; /* Adjust the font size as needed */
+}
+
+/* Styling for the forgot-password link */
+.forgot-password {
+  margin-bottom: 5px; /* Adjust margin as needed */
+  align-self: flex-end; /* Align to the right within the container */
+}
+
+.forgot-password a {
+  color: rgb(0, 140, 255);
+  text-decoration: none;
+  font-size: 12px; /* Adjust the font size for the "Forgot Password?" text */
+}
+
+.forgot-password a:hover {
+  text-decoration: underline;
+}
+
+/* Styling for create-account section */
 .create-account {
   margin-top: 15px;
-  font-size: 14px;
-  color: #ffffff;
+  text-align: center;
+  font-size: 12px;
 }
 
 .create-account a {
-  color: #007bff;
+  color: rgb(0, 140, 255);
   text-decoration: none;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .create-account a:hover {
   text-decoration: underline;
+}
+
+/* Mobile responsiveness */
+@media screen and (max-width: 600px) {
+  .login-page {
+    width: 90%; /* Adjust width for mobile view */
+    height: auto; /* Allow height to adjust based on content */
+    padding: 20px; /* Adjust padding for mobile view */
+    border-radius: 20px; /* Adjust border radius for mobile view */
+  }
+
+  .form-group input {
+    width: calc(100% - 30px);
+    max-width: calc(100% - 30px);
+    margin: 0;
+  }
+
+  .forgot-password,
+  .create-account {
+    margin-top: 10px; /* Adjust top margin for mobile view */
+  }
 }
 </style>
