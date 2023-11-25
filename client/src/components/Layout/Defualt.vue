@@ -50,7 +50,7 @@
 <script>
 // import { authMixin } from '../../authMixin';
 import axios from 'axios';
-
+logoutuserdata
 export default {
   data() {
     return {
@@ -74,6 +74,10 @@ export default {
     const userId = localStorage.getItem('user_id');
     this.fetchUserData();
   },
+  logout(){
+    localStorage.removeItem('user_id');
+    this.$router.push('/login');
+  }
 };
 </script>
 <style scoped>
@@ -106,6 +110,8 @@ header {
 
 .userdata{
   font-size: 16px;
+  color: white;
+  margin: 5px;
 }
 .header-left-section {
   display: flex;
