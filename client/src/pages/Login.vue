@@ -88,7 +88,7 @@ export default {
 
 <style scoped>
 .body {
-  background-color: #f0f0f0;
+  background-color: #000000;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -96,7 +96,7 @@ export default {
 }
 
 .login-page {
-  background-color: #fff;
+  background-color: #292626;
   border-radius: 8px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
   padding: 20px;
@@ -105,7 +105,7 @@ export default {
 }
 
 h2 {
-  color: #333;
+  color: #ffffff;
   font-size: 24px;
   margin-bottom: 20px;
 }
@@ -132,7 +132,7 @@ label {
   display: block;
   margin-bottom: 5px;
   font-size: 14px;
-  color: #555;
+  color: #ffffff;
 }
 
 input {
@@ -175,7 +175,7 @@ input {
 .create-account {
   margin-top: 15px;
   font-size: 14px;
-  color: #555;
+  color: #ffffff;
 }
 
 .create-account a {
