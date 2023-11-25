@@ -3,7 +3,7 @@
   <div class="body">
     <div class="full-frame">
       <div class="login-page">
-        <h2>Login into your account</h2>
+        <h2>Login</h2>
         <p class="message" :class="{ 'success-message': isSuccess, 'error-message': !isSuccess }">
           {{ message }}
         </p>
@@ -189,7 +189,7 @@ button:hover {
 
 /* Styling for create-account section */
 .create-account {
-  margin-top: 15px;
+  margin-top: -15px;
   text-align: center;
   font-size: 12px;
 }

@@ -118,7 +118,7 @@ export default {
     border-radius: 40px;
     background-color: white;
     width: 380px;
-    height: 420px;
+    height: 400px;
     padding-top: 30px;
   }
   
@@ -179,6 +179,11 @@ export default {
     font-size: 12px;
   }
   
+  .p{
+    padding-top: 5px;
+    text-align: center;
+    font-size: 11px;
+  }
   .create-account a:hover {
     text-decoration: underline;
   }
