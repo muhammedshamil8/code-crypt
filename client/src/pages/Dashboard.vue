@@ -60,7 +60,7 @@ export default {
           gradient: `${this.gradientColors[index % this.gradientColors.length]}, black`,
         }));
         this.tasks.forEach((task) => {
-          this.$set(this.activeTasks, task.task_id, false);
+          // this.$set(this.activeTasks, task.task_id, false);
         });
       } catch (error) {
         console.error('Error fetching tasks:', error);

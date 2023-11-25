@@ -75,7 +75,7 @@ export default {
       }
     },
     logout() {
-      // localStorage.removeItem('user_id');
+      localStorage.removeItem('user_id');
       this.$router.push('/login');
     },
   },
