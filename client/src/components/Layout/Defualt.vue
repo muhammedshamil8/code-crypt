@@ -50,14 +50,19 @@
 <script>
 // import { authMixin } from '../../authMixin';
 import axios from 'axios';
-logoutuserdata
+// logoutuserdata
 export default {
   data() {
     return {
       userData: null,
     };
   },
+  logout(){
+    localStorage.removeItem('user_id');
+    this.$router.push('/login');
+  },
   methods: {
+   
     async fetchUserData() {
       try {
         const userId = localStorage.getItem('user_id');
@@ -74,10 +79,7 @@ export default {
     const userId = localStorage.getItem('user_id');
     this.fetchUserData();
   },
-  logout(){
-    localStorage.removeItem('user_id');
-    this.$router.push('/login');
-  }
+  
 };
 </script>
 <style scoped>
