@@ -4,11 +4,22 @@
       <h3>My Tasks:</h3>
       <div class="task-card-parent">
         <div v-for="task in tasks" :key="task.task_id" class="task-card">
-          <div class="start-card" @click="toggleDetails(task.task_id)" :style="{ background: task.gradient }">
+          <div
+            class="start-card"
+            @click="toggleDetails(task.task_id)"
+            :style="{ background: task.gradient }"
+            :tabindex="0"
+            :aria-expanded="isActive(task.task_id)"
+          >
             <p class="task-name">{{ task.task_name }}</p>
             <img src="../../public/arrow.svg" alt="btn" class="arrow-btn" />
           </div>
-          <div class="details-card" :class="{ active: isActive(task.task_id) }">
+          <div
+            class="details-card"
+            :class="{ active: isActive(task.task_id) }"
+            :aria-hidden="!isActive(task.task_id)"
+            :aria-labelledby="'task-' + task.task_id"
+          >
             <p><b>Task Type</b><br />{{ task.task_type }}</p>
             <p><b>Description</b><br />{{ task.description }}</p>
             <p><b>End Date</b><br />{{ task.startDate }}</p>
@@ -20,6 +31,7 @@
   </div>
 </template>
 
+
 <script>
 import axios from 'axios';
 
@@ -28,7 +40,7 @@ export default {
   data() {
     return {
       tasks: [],
-      activeTasks: {}, // Keep track of the active task for each task
+      activeTasks: {},
       gradientColors: [
         'linear-gradient(to top, #000, #feb47b)',
         'linear-gradient(to top,#000, #7F7FD5, #86A8E7, #91EAE4)',
@@ -71,32 +83,20 @@ export default {
 /* Your existing styles here */
 
 .start-card {
-  /* Other styles remain unchanged */
-  background-size: 200% 100%; /* For gradient transition */
+  background-size: 200% 100%;
   transition: background-position 0.3s ease;
 }
 
 .start-card:hover {
   background-position: right center;
 }
-
-/* Add this style to transition the gradient on hover */
-
-.task-card {
-  /* Other styles remain unchanged */
-  overflow: hidden; /* Hide overflow to hide bottom black */
+.start-card:focus {
+  outline: 2px solid #3498db;
 }
 
-
-
-.start-card:hover {
-  background-position: right center;
-}
-
-/* Add this style to transition the gradient on hover */
 .task-card-parent {
   display: flex;
-  overflow-x: auto; /* changed to auto for better cross-browser support */
+  overflow-x: auto;
 }
 
 .task-card {
@@ -160,7 +160,6 @@ export default {
   background-color: #f1f1f1;
 }
 
-/* For Firefox */
 .task-card-parent {
   scrollbar-width: thin;
   scrollbar-color: #ddd transparent;

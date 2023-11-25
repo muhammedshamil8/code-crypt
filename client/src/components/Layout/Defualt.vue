@@ -74,6 +74,10 @@ export default {
         console.error('Error fetching user data:', error);
       }
     },
+    logout() {
+      // localStorage.removeItem('user_id');
+      this.$router.push('/login');
+    },
   },
   mounted() {
     const userId = localStorage.getItem('user_id');

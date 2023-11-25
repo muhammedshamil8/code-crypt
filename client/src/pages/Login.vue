@@ -1,32 +1,39 @@
+
 <template>
   <div class="body">
-   <div class="full-frame">
-    <div class="login-page">
-      <div class="heading"><h2>Login into your account</h2></div>
-      <form @submit.prevent="login">
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" v-model="email" required />
-        </div>
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input type="password" id="password" v-model="password" required />
-        </div>
-        <div class="form-group-button">
-          <div class="forgot-password">
-            <a href="#">Forgot Password?</a>
-          </div>
-          <button type="submit">Log in</button>
-        </div>
-      </form>
-      <div class="create-account">
-        <p>Need an account?
-          <router-link to="/signup">Sign up</router-link>
+    <div class="full-frame">
+      <div class="login-page">
+        <h2>Login into your account</h2>
+        <p class="message" :class="{ 'success-message': isSuccess, 'error-message': !isSuccess }">
+          {{ message }}
         </p>
+
+        <form @submit.prevent="login">
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" v-model="email" required :disabled="isLoading" />
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" v-model="password" required :disabled="isLoading" />
+          </div>
+      
+          <div class="form-group-button">
+           
+            <button type="submit" :disabled="isLoading" class="button">
+              {{ isLoading ? 'Logging in...' : 'Log in' }}
+            </button>
+          </div>
+          <div class="forgot-password">
+              <a href="#">Forgot Password?</a>
+            </div><br />
+        </form>
+        <div class="create-account">
+          <p>Need an account? <router-link to="/signup">Sign up</router-link></p>
+        </div>
       </div>
     </div>
   </div>
-</div>
 </template>
 
 <script>
@@ -37,28 +44,43 @@ export default {
     return {
       email: '',
       password: '',
+      message: '',
+      isSuccess: false,
+      isLoading: false,
     };
   },
   methods: {
     async login() {
       try {
+        this.isLoading = true;
         const response = await axios.post('http://localhost:9000/api/login', {
           email: this.email,
           password: this.password,
-          message:''
         });
+
         if (response.data.status === 1) {
-          // Login successful, perform necessary actions (e.g., redirect)
-          console.log('Login successful', response.data.userId);
-          this.$router.push('/dashboard');
+          this.isSuccess = true;
+          this.message = 'Login successful. Redirecting...';
+
+          localStorage.setItem('user_id', response.data.userId);
+          setTimeout(() => {
+            this.$router.push('/dashboard');
+          }, 1500);
         } else {
-          // Display error message to the user
-          this.message = 'Login failed, wrong credentials' ;
-          console.error('Login failed:', response.data.message);
+          this.message = 'Login failed. Wrong credentials.';
+          this.isSuccess = false;
         }
       } catch (error) {
         console.error('Error:', error);
-        // Handle other errors (e.g., network error)
+        this.message = 'An error occurred. Please try again.';
+        this.isSuccess = false;
+      } finally {
+        this.email = '';
+        this.password = '';
+        this.isLoading = false;
+        setTimeout(() => {
+          this.message = '';
+        }, 5000);
       }
     },
   },

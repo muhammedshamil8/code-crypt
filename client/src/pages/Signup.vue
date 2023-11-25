@@ -70,6 +70,7 @@ export default {
 
       if (data.status === 1) {
         this.registrationMessage = 'Registration successful!';
+        alert('Registration successful!')
         setTimeout(() => {
           this.$router.push('/login');
         }, 3000);
@@ -206,10 +207,10 @@ export default {
       margin-top: 10px;
     }
   }
+  .error-message {
+    color: #e74c3c; /* Red error text */
+    margin-top: 10px;
+    text-align: center;
+    font-size: 12px;
+  }
   </style>
-.error-message {
-  color: #e74c3c; /* Red error text */
-  margin-top: 10px;
-  text-align: center;
-  font-size: 12px;
-}
