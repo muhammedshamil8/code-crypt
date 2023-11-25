@@ -1,23 +1,30 @@
-<!-- Signup.vue -->
 <template>
   <div class="signup-container">
     <form @submit.prevent="registerUser" class="signup-form">
       <h2>Sign Up for Free</h2>
 
-      <label for="username">Username:</label>
-      <input type="text" id="username" v-model="formData.username" required />
+      <div class="form-group">
+        <label for="username">Username:</label>
+        <input type="text" id="username" v-model="formData.username" required />
+      </div>
       
-      <label for="email">Email:</label>
-      <input type="email" id="email" v-model="formData.email" required />
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" v-model="formData.email" required />
+      </div>
 
-      <label for="password">Password:</label>
-      <input type="password" id="password" v-model="formData.password" required />
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="password" id="password" v-model="formData.password" required />
+      </div>
 
-      <label for="passwordConfirm">Confirm Password:</label>
-      <input type="password" id="passwordConfirm" v-model="formData.passwordConfirm" required />
+      <div class="form-group">
+        <label for="passwordConfirm">Confirm Password:</label>
+        <input type="password" id="passwordConfirm" v-model="formData.passwordConfirm" required />
+      </div>
 
       <button type="submit">Sign Up</button>
-      <p>Need an account? <router-link to="/login">Login</router-link></p>
+      <p>Already have an account? <router-link to="/login">Login</router-link></p>
       <p v-if="error" class="error-message">{{ error }}</p>
     </form>
   </div>
@@ -74,14 +81,13 @@ export default {
 };
 </script>
 
-
 <style scoped>
 .signup-container {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #f1f1f1; /* Light gray background */
+  background-color: #f8f9fa; /* Lighter gray background */
 }
 
 .signup-form {
@@ -94,13 +100,17 @@ export default {
 
 h2 {
   text-align: center;
-  color: #333; /* Dark gray text */
+  color: #343a40; /* Dark gray text */
+}
+
+.form-group {
+  margin-bottom: 15px;
 }
 
 label {
   display: block;
   margin-top: 10px;
-  color: #555; /* Medium gray text */
+  color: #495057; /* Dark gray text */
 }
 
 input {
@@ -109,20 +119,26 @@ input {
   margin-top: 5px;
   margin-bottom: 10px;
   box-sizing: border-box;
+  border: 1px solid #ced4da; /* Light gray border */
+  border-radius: 4px;
 }
 
 button {
   width: 100%;
   padding: 10px;
-  background-color: #3498db; /* Blue button color */
+  background-color: #007bff; /* Blue button color */
   color: #ffffff; /* White text */
   border: none;
   border-radius: 5px;
   cursor: pointer;
 }
 
+button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
 .error-message {
-  color: #e74c3c; /* Red error text */
+  color: #dc3545; /* Red error text */
   margin-top: 10px;
   text-align: center;
 }

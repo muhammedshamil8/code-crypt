@@ -22,14 +22,31 @@ db.connect((err) => {
   }
   console.log('Connected to MySQL');
 });
-// Fetch tasks for a user
+
+// Fetch user details
 app.get('/api/users/:userId', async (req, res) => {
+  const userId = req.params.userId;
+
+  try {
+    // Query user details for the specific user using userId
+    // Modify this query based on your database structure
+    const [users] = await db.promise().query('SELECT * FROM users WHERE id = ?', [userId]);
+
+    res.json(users);
+  } catch (error) {
+    console.error('Error fetching user details:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Modify the /api/tasks/ endpoint to accept a userId parameter
+app.get('/api/tasks/:userId', async (req, res) => {
   const userId = req.params.userId;
 
   try {
     // Query tasks for the specific user using userId
     // Modify this query based on your database structure
-    const [tasks] = await db.promise().query('SELECT * FROM users WHERE user_id = ?', [userId]);
+    const [tasks] = await db.promise().query('SELECT * FROM event WHERE user_id = ?', [userId]);
 
     res.json(tasks);
   } catch (error) {
@@ -37,23 +54,6 @@ app.get('/api/users/:userId', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-
-// Add this route in your Express.js server
-app.get('/api/tasks/', async (req, res) => {
-  // const userId = req.params.userId;
-
-  try {
-    // Query tasks for the specific user using userId
-    // Modify this query based on your database structure
-    const [tasks] = await db.promise().query('SELECT * FROM event');
-
-    res.json(tasks);
-  } catch (error) {
-    console.error('Error fetching tasks:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
-
 
 
 // User login endpoint

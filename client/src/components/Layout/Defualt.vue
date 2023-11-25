@@ -10,13 +10,14 @@
       </div>
       <div class="header-left-section">
         <img src="../../../public/Bell_fillnotification.svg" alt="logo" class="notification-logo" />
-        <img src="../../../public/amjad.svg" alt="logo" class="profile-logo" />
+        <h3>Taskify</h3>
+
       </div>
     </header>
     <aside>
       <div class="taskify-logo">
-        Taskify
-        {{ userData && userData.username }}
+        <img src="../../../public/amjad.svg" alt="logo" class="profile-logo" />
+        <p class="userdata">{{ userData ? userData[0].username : '' }}</p>
       </div>
       <ul class="nav-bar">
         <li><img src="../../../public/griddashboard.svg" alt="" class=""> <router-link to="/dashboard" class="link"
@@ -42,31 +43,28 @@
     <div class="main-content">
       <router-view name="main" />
     </div>
-    <p v-if="isAuthenticated">Authenticated content</p>
-  <p v-else>Not authenticated. Redirecting...</p>
+   
   </div>
 </template>
   
 <script>
-import { authMixin } from '../../authMixin';
+// import { authMixin } from '../../authMixin';
+import axios from 'axios';
 
 export default {
-  mixins: [authMixin],
   data() {
     return {
       userData: null,
     };
   },
   methods: {
-    logout() {
-      localStorage.removeItem('user_id');
-      this.$router.push('/login');
-    },
-    async fetchUserData(userId) {
+    async fetchUserData() {
       try {
-        const response = await this.$axios.get(`http://localhost:9000/api/user/${userId}`);
+        const userId = localStorage.getItem('user_id');
+        console.log(userId);
+        const response = await axios.get(`http://localhost:9000/api/users/${userId}`);
+        console.log(response.data);
         this.userData = response.data;
-        console.log(this.userData)
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
@@ -74,7 +72,7 @@ export default {
   },
   mounted() {
     const userId = localStorage.getItem('user_id');
-    this.fetchUserData(userId);
+    this.fetchUserData();
   },
 };
 </script>
@@ -87,9 +85,9 @@ export default {
 
 /* header */
 header {
-  background-color: #05a805;
+  background-color: #000000;
   height: 80px;
-  width: 78%;
+  width: 80%;
   color: #fff;
   float: right;
   display: flex;
@@ -102,10 +100,13 @@ header {
 
 .profile-logo {
   border-radius: 50%;
-  width: 50px;
-  height: 50px;
+  width: 60px;
+  height: 60px;
 }
 
+.userdata{
+  font-size: 16px;
+}
 .header-left-section {
   display: flex;
   align-items: center;
@@ -158,9 +159,9 @@ header {
 
 
 aside {
-  background-color: #a70f0f;
+  background-color: #2e2b2b;
   min-height: 100%;
-  width: 25%;
+  width: 20%;
   float: left;
   color: #fff;
   display: flex;
@@ -175,11 +176,12 @@ aside {
 .taskify-logo {
   width: 100%;
   height: 60px;
-  background-color: #fff;
+  /* background-color: #fff; */
   color: #000;
   font-size: 30px;
   font-weight: 600;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   margin-top: 10px;
@@ -210,10 +212,10 @@ aside {
 
 /* main-content */
 .main-content {
-  background-color: #1412ac;
+  background-color: #000000;
   height: calc(100vh - 80px);
   /* Subtract the height of the header */
-  width: 78%;
+  width: 80%;
   margin-top: 80px;
   /* Height of the header */
   float: right;
